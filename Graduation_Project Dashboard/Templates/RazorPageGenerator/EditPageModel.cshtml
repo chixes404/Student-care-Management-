@@ -1,0 +1,156 @@
+@inherits Microsoft.VisualStudio.Web.CodeGeneration.Templating.RazorTemplateBase
+@using System.Collections.Generic
+@using System.Linq
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Graduation_Project_Dashboard.Services;
+@{
+    var primaryKeyName = Model.ModelMetadata.PrimaryKeys[0].PropertyName;
+    var viewDataTypeShortNameLowerCase = Model.ViewDataTypeShortName.ToLowerInvariant();
+    var primaryKeyShortTypeName = Model.ModelMetadata.PrimaryKeys[0].ShortTypeName;
+    var primaryKeyType = Model.ModelMetadata.PrimaryKeys[0].TypeName;
+    var primaryKeyNullableTypeName = GetNullableTypeName(primaryKeyType, primaryKeyShortTypeName);
+    var lambdaVar = Model.ModelVariable[0];
+    var entitySetName = Model.ModelMetadata.EntitySetName;
+    var relatedProperties = new Dictionary<string, dynamic>();
+    foreach (var nav in Model.ModelMetadata.Navigations)
+    {
+        relatedProperties.Add(nav.AssociationPropertyName, nav);
+
+    }
+    var inlineIncludes = "";
+    foreach (var property in relatedProperties.Values)
+    {
+        inlineIncludes += string.Format("{0}                .Include({1} => {1}.{2})", Environment.NewLine, lambdaVar, property.AssociationPropertyName);
+    }
+
+    foreach (var namespaceName in Model.RequiredNamespaces)
+    {
+@:using @namespaceName;
+    }
+}
+
+namespace @Model.NamespaceName
+{
+    public class @Model.PageModelClassName : PageModel
+    {
+        private readonly @Model.ContextTypeName _context;
+        private readonly UserResolverService _userService;
+
+        public @(Model.PageModelClassName)(@Model.ContextTypeName context, UserResolverService userService)
+        {
+            _context = context;
+            _userService = userService;
+        }
+
+        [BindProperty]
+        public @Model.ViewDataTypeShortName @Model.ViewDataTypeShortName { get; set; } = default!;
+
+        public async Task<IActionResult> OnGetAsync(@primaryKeyNullableTypeName id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @viewDataTypeShortNameLowerCase =  await _context.@(entitySetName)
+                @(inlineIncludes)
+                .FirstOrDefaultAsync(m => m.@primaryKeyName == id);
+            if (@viewDataTypeShortNameLowerCase == null)
+            {
+                return NotFound();
+            }
+            @Model.ViewDataTypeShortName = @viewDataTypeShortNameLowerCase;
+@{
+    foreach (var property in relatedProperties.Values)
+    {
+           @:ViewData["@(property.ForeignKeyPropertyNames[0])"] = new SelectList(_context.@property.EntitySetName, "@property.PrimaryKeyNames[0]", "@property.DisplayPropertyName");
+    }
+}
+            return Page();
+        }
+
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see https://aka.ms/RazorPagesCRUD.
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var NameValidation = _context.@(entitySetName).Count(x => x.Id != @(Model.ModelTypeName).Id && x.Name == @(Model.ModelTypeName).Name);
+            if (NameValidation != 0)
+            {
+                ModelState.AddModelError("@(Model.ModelTypeName).Name", "@(Model.ModelTypeName) name already exists");
+                return Page();
+            }
+
+            var User = _context.Users.FirstOrDefault(u => u.Id == _userService.GetCurrentUserID());
+
+            @(Model.ModelTypeName).Updated = DateTime.Now;
+            @(Model.ModelTypeName).UpdatedBy = User.Id;
+            @(Model.ModelTypeName).UpdatedByNavigation = User;
+
+
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _context.Attach(@(Model.ModelTypeName)).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!@(Model.ModelTypeName)Exists(@Model.ViewDataTypeShortName.@primaryKeyName))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToPage("./Index");
+        }
+
+        private bool @(Model.ModelTypeName)Exists(@primaryKeyShortTypeName id)
+        {
+            return _context.@(entitySetName).Any(e => e.@primaryKeyName == id);
+        }
+    }
+}
+@functions
+{
+    // This function converts the primary key short type name to its nullable equivalent when possible. This is required to make
+    // sure that an HTTP 400 error is thrown when the user tries to access the edit, delete, or details action with null values.
+    string GetNullableTypeName(string typeName, string shortTypeName)
+    {
+        // The exceptions are caught because if for any reason the type is user defined, then the short type name will be used.
+        // In that case the user will receive a server error if null is passed to the edit, delete, or details actions.
+        Type primaryKeyType = null;
+        try
+        {
+            primaryKeyType = Type.GetType(typeName);
+        }
+        catch
+        {
+        }
+        if (primaryKeyType != null && (!Microsoft.VisualStudio.Web.CodeGeneration.Templating.TypeUtilities.IsNullable(primaryKeyType) || IsGuid(typeName)))
+        {
+            return shortTypeName + "?";
+        }
+        return shortTypeName;
+    }
+
+    bool IsGuid(string typeName) {
+        return String.Equals("System.Guid", typeName, StringComparison.OrdinalIgnoreCase);
+    }
+}

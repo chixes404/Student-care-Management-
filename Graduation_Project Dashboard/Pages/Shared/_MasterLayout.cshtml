@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>@ViewData["Title"] - GraduationProject.WebUI</title>
+
+    <!-- Global stylesheets -->
+    <link href="~/fonts/inter/inter.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/icons/phosphor/styles.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/icons/fontawesome/styles.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/css/ltr/all.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/css/animate.min.css"  rel="stylesheet" type="text/css" asp-append-version="true" />
+    @* <link href="~/css/fileinput.min.css" rel="stylesheet" type="text/css" /> *@
+
+    <!-- /global stylesheets -->
+    @await RenderSectionAsync("Styles", required: false)
+
+    <!-- Core JS files -->
+    <script src="~/scripts/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="~/scripts/jquery/jquery.min.js"></script>
+    <script src="~/demo/demo_configurator.js"></script>
+
+    <!-- /core JS files -->
+    <!-- Theme JS files -->
+    <script src="~/scripts/vendor/tables/datatables/datatables.min.js"></script>
+    <script src="~/scripts/vendor/tables/datatables/extensions/pdfmake/pdfmake.min.js"></script>
+    <script src="~/scripts/vendor/tables/datatables/extensions/pdfmake/vfs_fonts.min.js"></script>
+    <script src="~/scripts/vendor/tables/datatables/extensions/buttons.min.js"></script>
+    <script src="~/scripts/vendor/editors/ckeditor/ckeditor_classic.js"></script>
+    <script src="~/scripts/vendor/forms/selects/bootstrap_multiselect.js"></script>
+    <script src="~/scripts/vendor/ui/fullcalendar/main.min.js"></script>
+    <script src="~/scripts/vendor/uploaders/fileinput/fileinput.min.js"></script>
+    <script src="~/scripts/vendor/uploaders/fileinput/plugins/sortable.min.js"></script>
+    <script src="~/scripts/vendor/visualization/d3/d3.min.js"></script>
+    <script src="~/scripts/vendor/visualization/d3/d3_tooltip.js"></script>
+    <script src="~/scripts/vendor/visualization/echarts/echarts.min.js"></script>
+    <script src="~/scripts/app.js" asp-append-version="true"></script>
+    <script src="~/scripts/custom.js" asp-append-version="true"></script>
+    <!-- /theme JS files -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+</head>
+<body>
+
+    <partial name="_MainNavbar" />
+
+    <!-- Page content -->
+    <div class="page-content">
+
+        <partial name="_MainSidebar" />
+
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Inner content -->
+            <div class="content-inner">
+
+                <partial name="_PageHeader" />
+
+                <!-- Content area -->
+                <div class="content">
+
+                    @RenderBody()
+
+                </div>
+                <!-- /content area -->
+
+                <partial name="_Footer" />
+
+            </div>
+            <!-- /inner content -->
+
+        </div>
+        <!-- /main content -->
+
+    </div>
+    <!-- /page content -->
+
+
+    <partial name="_Notifications" />
+
+
+</body>
+</html>

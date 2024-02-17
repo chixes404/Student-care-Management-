@@ -1,0 +1,148 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Users.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+    ViewData["Entity"] = "Users";
+    ViewData["BreadCrumb"] = "<a href='/Users' class='breadcrumb-item'>Users</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+<div class="card">
+
+    <div class="card-header">
+        <h5 class="card-title mb-0">View User Details</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-2  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.Id)
+                        </label>
+                        <div class="col-lg-10">
+                            @Html.DisplayFor(model => model.User.Id)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.FirstName)
+                        </label>
+                        <div class="col-lg-8">
+                            @Html.DisplayFor(model => model.User.FirstName)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            image
+                        </label>
+                        <div class="col-lg-8">
+                           
+                                @if (Model.User.ImageURL == null)
+                                {
+
+                                    <img src="/uploads/clinics/2.webp" alt="image" style="width:80px" class="rounded-circle" />
+
+
+                                }
+                                else
+                                {
+
+                                    <img src="@Model.User.ImageURL" alt="image" style="width:80px" class="rounded-circle" />
+                                }
+
+                            
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.LastName)
+                        </label>
+                        <div class="col-lg-8">
+                            @Html.DisplayFor(model => model.User.LastName)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.IsActive)
+                        </label>
+                        <div class="col-lg-8">
+                            @Html.DisplayFor(model => model.User.IsActive)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.UserName)
+                        </label>
+                        <div class="col-lg-8">
+                            @Html.DisplayFor(model => model.User.UserName)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.Email)
+                        </label>
+                        <div class="col-lg-8">
+                            @Html.DisplayFor(model => model.User.Email)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-lg-6">
+                <fieldset>
+                    <div class="form-group row col-form-label">
+                        <label class="col-lg-4  fw-bold">
+                            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+                        </label>
+                        <div class="col-lg-8">
+                            @Html.DisplayFor(model => model.User.PhoneNumber)
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+        <a asp-page="./Index" class="btn btn-primary btn-labeled btn-labeled-start">
+            Back
+            <span class="btn-labeled-icon bg-black bg-opacity-20">
+                <i class="icon-arrow-left8"></i>
+            </span>
+        </a>
+        <a asp-page="./Edit" class="btn btn-primary btn-labeled btn-labeled-end" asp-route-id="@Model.User.Id">
+            Edit
+            <span class="btn-labeled-icon bg-black bg-opacity-20">
+                <i class="icon-pencil7"></i>
+            </span>
+        </a>
+    </div>
+</div>
+

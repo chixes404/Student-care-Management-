@@ -1,0 +1,202 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor Accessor
+
+<!-- Main sidebar -->
+<div class="sidebar sidebar-dark sidebar-main sidebar-expand-lg">
+
+    <!-- Sidebar content -->
+    <div class="sidebar-content">
+
+        <!-- Sidebar header -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-body d-flex justify-content-center">
+                <h5 class="sidebar-resize-hide flex-grow-1 my-auto">Navigation</h5>
+
+                <div>
+                    <button type="button" class="btn btn-flat-white btn-icon btn-sm rounded-pill border-transparent sidebar-control sidebar-main-resize d-none d-lg-inline-flex">
+                        <i class="ph-arrows-left-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-flat-white btn-icon btn-sm rounded-pill border-transparent sidebar-mobile-main-toggle d-lg-none">
+                        <i class="ph-x"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- /sidebar header -->
+        <!-- Main navigation -->
+        <div class="sidebar-section">
+            <ul class="nav nav-sidebar" data-nav-type="accordion">
+
+                <li class="nav-item">
+                    <a href="~/" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().Equals("/") ? "active" : "" )">
+                        <i class="ph-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                
+
+
+                <!-- Administrator -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator")))
+                {
+                    <li class="nav-item-header pt-0">
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Administrator</div>
+                        <i class="ph-dots-three sidebar-resize-show"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/users" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/users") ? "active" : "" )">
+                            <i class="ph-users-three"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                  
+                }
+
+             @*    <!-- Configuration -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Configuration")))
+                {
+                    <li class="nav-item-header pt-0">
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Configuration</div>
+                        <i class="ph-dots-three sidebar-resize-show"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/clinics" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/clinics") ? "active" : "" )">
+                            <i class="ph-buildings"></i>
+                            <span>Clinics</span>
+                        </a>
+                        <ul class="nav-group-sub collapse">
+                            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active">Default</a></li>
+                            <li class="nav-item"><a href="../../../LTR/material/full/javascript:void(0)" class="nav-link disabled">Material <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
+                            <li class="nav-item"><a href="../../../LTR/clean/full/javascript:void(0)" class="nav-link disabled">Clean <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/doctors" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/doctors") ? "active" : "" )">
+                            <i class="ph-address-book"></i>
+                            <span>Doctors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/insurance" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/insurance") ? "active" : "" )">
+                            <i class="ph-identification-card"></i>
+                            <span>Insurance</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/vacations" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/vacations") ? "active" : "" )">
+                            <i class="ph-pinwheel"></i>
+                            <span>Vacations</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- Content -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Content")))
+                {
+
+                    <li class="nav-item-header pt-0">
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Content</div>
+                        <i class="ph-dots-three sidebar-resize-show"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/blog" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/blog") ? "active" : "" )">
+                            <i class="ph-newspaper-clipping"></i>
+                            <span>Blog</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/news" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/news") ? "active" : "" )">
+                            <i class="ph-newspaper"></i>
+                            <span>News</span>
+                        </a>
+                    </li>
+                  
+                    <li class="nav-item">
+                        <a href="~/faqs" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/faqs") ? "active" : "" )">
+                            <i class="ph-question"></i>
+                            <span>FAQs</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="~/pages" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/pages") ? "active" : "" )">
+                            <i class="ph-file-text"></i>
+                            <span>Pages</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- Operations -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Operations")))
+                {
+                    <li class="nav-item-header pt-0">
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Operations</div>
+                        <i class="ph-dots-three sidebar-resize-show"></i>
+                    </li>
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/booking") ? "active" : "" )">
+                            <i class="ph-calendar-check"></i>
+                            <span>Booking</span>
+                        </a>
+                        <ul class="nav-group-sub collapse">
+                            <li class="nav-item"><a href="~/booking/" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().Equals("/booking/") ? "active" : "" )">All</a></li>
+                            <li class="nav-item"><a href="~/booking/new" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/booking/new") ? "active" : "" )">New</a></li>
+                            <li class="nav-item"><a href="~/booking/rescheduled" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/booking/rescheduled") ? "active" : "" )">Rescheduled</a></li>
+                            <li class="nav-item"><a href="~/booking/canceled" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/booking/canceled") ? "active" : "" )">Canceled</a></li>
+                            <li class="nav-item"><a href="~/booking/done" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/booking/done") ? "active" : "" )">Done</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/messages") ? "active" : "" )">
+                            <i class="ph-chat-text"></i>
+                            <span>Messages</span>
+                        </a>
+                        <ul class="nav-group-sub collapse">
+                            <li class="nav-item"><a href="/messages/" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().Equals("/messages/") ? "active" : "" )">All</a></li>
+                            <li class="nav-item"><a href="/messages/new" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/messages/new") ? "active" : "" )">New</a></li>
+                            <li class="nav-item"><a href="/messages/pending" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/messages/pending") ? "active" : "" )">Pending</a></li>
+                            <li class="nav-item"><a href="/messages/archives" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/messages/archives") ? "active" : "" )">Archives</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/complaints") ? "active" : "" )">
+                            <i class="ph-chat-centered-dots"></i>
+                            <span>Complaints</span>
+                        </a>
+                        <ul class="nav-group-sub collapse">
+                            <li class="nav-item"><a href="~/complaints/" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().Equals("/complaints/") ? "active" : "" )">All</a></li>
+                            <li class="nav-item"><a href="~/complaints/new" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/complaints/new") ? "active" : "" )">New</a></li>
+                            <li class="nav-item"><a href="~/complaints/pending" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/complaints/pending") ? "active" : "" )">Pending</a></li>
+                            <li class="nav-item"><a href="~/complaints/archives" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/complaints/archives") ? "active" : "" )">Archives</a></li>
+                        </ul>
+                    </li>
+                }
+
+
+
+                <!-- Reports -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Reports")))
+                {
+                    <li class="nav-item-header pt-0">
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Reports</div>
+                        <i class="ph-dots-three sidebar-resize-show"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/reports/dashboard" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/reports/dashboard") ? "active" : "" )">
+                            <i class="ph-presentation-chart"></i>
+                            <span>
+                                Dashboard
+                                 <span class="d-block fw-normal opacity-50">No pending booking</span> 
+                            </span>
+                        </a>
+                    </li>
+                }
+ *@
+            </ul>
+        </div>
+        <!-- /main navigation -->
+
+    </div>
+    <!-- /sidebar content -->
+
+</div>
+<!-- /main sidebar -->

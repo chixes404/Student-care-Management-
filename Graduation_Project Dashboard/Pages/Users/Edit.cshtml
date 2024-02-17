@@ -1,0 +1,153 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Users.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    ViewData["Entity"] = "Users";
+    ViewData["BreadCrumb"] = "<a href='/Users' class='breadcrumb-item'>Users</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Edit User</h5>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <input type="hidden" asp-for="User.Id" />
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.FirstName" class="control-label"></label>
+                        <input asp-for="User.FirstName" class="form-control" />
+                        <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.LastName" class="control-label"></label>
+                        <input asp-for="User.LastName" class="form-control" />
+                        <span asp-validation-for="User.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.Address" class="control-label"></label>
+                        <input asp-for="User.Address" class="form-control" />
+                        <span asp-validation-for="User.Address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.Email" class="control-label"></label>
+                        <input asp-for="User.Email" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="User.Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group mt-4">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="User.IsActive" /> @Html.DisplayNameFor(model => model.User.IsActive)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <p>Current image</p>
+                       
+                            @if (Model.User.ImageURL == null)
+                            {
+
+                                <img src="/uploads/clinics/2.webp" alt="image" style="width:80px" class="rounded-circle" />
+
+
+                            }
+                            else
+                            {
+
+                                <img src="@Model.User.ImageURL" alt="image" style="width:80px" class="rounded-circle" />
+                            }
+
+                        
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.PhoneNumber" class="control-label"></label>
+                        <input asp-for="User.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.RoleId" class="control-label"></label>
+                        <select asp-for="Input.RoleId" class="form-control multiselect" multiple="multiple" required data-fouc>
+                            <option value="bdebdb78-4dc9-40ac-b319-f4e5e7bc3503">Administrator</option>
+                            <option data-role="divider"></option>
+                            <option value="b4018cb5-755e-468b-9802-a9917c37730e">Teacher</option>
+                            <option value="b1c940d9-1014-48f9-8cd8-a410eb35bc1f">Employee</option>
+                            <option value="ee30e20d-5851-4f96-bc13-6aa7c73ce07c">User</option>
+                        </select>
+                        <span asp-validation-for="Input.RoleId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label"> upload new image</label>
+                        <input asp-for="Upload" type="file" class="form-control file-input" data-show-upload="false" />
+                        <span asp-validation-for="Upload" class="text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="User.UserName" />
+                <input type="hidden" asp-for="User.EmailConfirmed" />
+                <input type="hidden" asp-for="User.LockoutEnabled" />
+                <input type="hidden" asp-for="User.LockoutEnd" />
+                <input type="hidden" asp-for="User.NormalizedEmail" />
+                <input type="hidden" asp-for="User.NormalizedUserName" />
+                <input type="hidden" asp-for="User.PhoneNumberConfirmed" />
+                <input type="hidden" asp-for="User.SecurityStamp" />
+                <input type="hidden" asp-for="User.PasswordHash" />
+                <input type="hidden" asp-for="User.SecurityStamp" />
+                <input type="hidden" asp-for="User.ConcurrencyStamp" />
+                <input type="hidden" asp-for="User.TwoFactorEnabled" />
+                <input type="hidden" asp-for="User.LockoutEnabled" />
+                <input type="hidden" asp-for="User.AccessFailedCount" />
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+            <a asp-page="Index" class="btn btn-primary btn-labeled btn-labeled-start">
+                Cancel
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-arrow-left8"></i>
+                </span>
+            </a>
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Save
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+@* @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script>
+
+            $(document).ready(function () {
+            @foreach (var item in Model.User.UserRoles)
+            {
+               @: $('.multiselect').multiselect('select', '@item.Role.Id');
+            }
+                $('.multiselect').multiselect('destroy');
+                $('.multiselect').multiselect();
+            });
+        </script>
+
+
+    }
+} *@
+

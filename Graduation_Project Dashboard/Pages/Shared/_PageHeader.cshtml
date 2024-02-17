@@ -1,0 +1,31 @@
+﻿<!-- Page header -->
+<div class="page-header page-header-light border" >
+    <div class="page-header-content d-flex">
+        <div class="page-title">
+            <h5 class="mb-0">@ViewData["Entity"] - <span class="fw-normal">@ViewData["Title"]</span></h5>
+        </div>
+
+        @if (ViewData["Title"] == "List")
+        {
+            if (ViewData["Entity"] == "Bookings" || ViewData["Entity"] == "Messages" || ViewData["Entity"] == "Complaints")
+            {
+                
+            }
+            else
+            {
+                <div class="my-auto ms-auto">
+                    <a asp-page="Create" class="btn btn-primary w-100 w-sm-auto">Create New</a>
+                </div>
+            }
+        }
+    </div>
+    <div class="page-header-content border-top">
+        <div class="breadcrumb">
+            <a href="\" class="breadcrumb-item"><i class="ph-house"></i></a>
+            <a href="\" class="breadcrumb-item py-2">Home</a>
+            @Html.Raw(@ViewData["BreadCrumb"])
+            <span class="breadcrumb-item active py-2">Current</span>
+        </div>
+    </div>
+</div>
+<!-- /page header -->

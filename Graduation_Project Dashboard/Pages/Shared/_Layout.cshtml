@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+@section MainStyle
+{
+    @*<link href="~/lib/datatables.net-bs5/dataTables.bootstrap5.css" rel="stylesheet" type="text/css">*@
+    @*<link href="~/lib/datatables/DataTables-1.11.5/css/jquery.dataTables.css" rel="stylesheet" type="text/css">*@
+   
+@*    <script src="~/lib/datatables/DataTables-1.11.5/js/jquery.dataTables.js"></script>
+	<script src="~/lib/datatables/pdfmake-0.1.36/pdfmake.js"></script>
+	<script src="~/lib/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
+	<script src="~/lib/datatables/Buttons-2.2.2/js/buttons.html5.js"></script>
+    <script src="~/lib/datatables/Buttons-2.2.2/js/buttons.print.js"></script>*@
+    @await RenderSectionAsync("Style", required: false)
+
+   
+    
+}
+
+<!-- Main sidebar -->
+<div class="sidebar sidebar-light sidebar-main sidebar-expand-lg">
+
+    <!-- Sidebar content -->
+    <div class="sidebar-content">
+        @* <partial name="_UserMenu" /> *@
+        <partial name="_MainSidebar" />
+    </div>
+    <!-- /sidebar content -->
+
+</div>
+<!-- /main sidebar -->
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+    <!-- Inner content -->
+    <div class="content-inner">
+           
+        <partial name="_PageHeader" />
+
+        <!-- Content area -->
+        <div class="content">
+            @RenderBody()
+        </div>
+        <!-- /content area -->
+
+        <partial name="_Footer" />
+
+    </div>
+    <!-- /inner content -->
+
+    
+</div>
+<!-- /main content -->
+@section MainScript {
+
+    @*<script src="~/lib/datatables/DataTables-1.11.5/js/dataTables.bootstrap5.js"></script>*@
+    @*<script src="~/script/datatables/datatables.min.js"></script>*@
+   
+
+    @await RenderSectionAsync("Script", required: false)
+
+
+}
