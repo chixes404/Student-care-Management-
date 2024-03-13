@@ -7,6 +7,28 @@
     ViewData["BreadCrumb"] = "<a href='/Users' class='breadcrumb-item'>Users</a>";
     Layout = "~/Pages/Shared/_MasterLayout.cshtml";
 }
+
+<h1>Search for User</h1>
+
+<form method="get">
+    <div class="form-group">
+        <input type="text" class="form-control" id="searchInput" name="searchInput" placeholder="Enter UserName">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+@if (Model.Users != null && Model.Users.Any())
+{
+    <h2>Search Results</h2>
+    <ul>
+        @foreach (var user in Model.Users)
+        {
+            <li>@user.UserName</li>
+        }
+    </ul>
+}
+
+
 <form method="post">
     <div class="card">
         <div class="card-header">
@@ -14,6 +36,8 @@
         </div>
         <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         
+
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -34,6 +58,13 @@
                         <label asp-for="Input.Email" class="control-label"></label>
                         <input id="emailCheck" asp-for="Input.Email" class="form-control" type="email" />
                         <span id="emailMsg" asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.NationalId" class="control-label"></label>
+                        <input  asp-for="Input.NationalId" class="form-control" type="text" />
+                        <span  asp-validation-for="Input.NationalId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -100,6 +131,19 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+
+    <script>
+        function searchUser() {
+            var firstName = document.getElementById("searchFirstName").value;
+            if (firstName.trim() !== "") {
+                // Perform search
+                window.location.href = "/Users/Search?firstName=" + firstName;
+            } else {
+                alert("Please enter a first name to search.");
+            }
+        }
+    </script>
 
     <script type="text/javascript">
         function CheckPasswordStrength(password) {
@@ -179,6 +223,7 @@
             document.getElementById("txtPassword").value = password;
             CheckPasswordStrength(password);
         }
+
 
 
     //      document.getElementById('emailCheck').addEventListener('keydown', function () {

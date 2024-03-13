@@ -14,7 +14,7 @@ namespace Graduation_Project_Dashboard.Services
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
+         {
             string fromMail = Configuration["Smtp:From"];
             string fromPassword = Configuration["Smtp:password"];
 

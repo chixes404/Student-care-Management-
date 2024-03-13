@@ -28,7 +28,9 @@ public partial class File : BaseEntity
     [Column("FileURL")]
     public string FileUrl { get; set; }
 
+    public int TeacherID { get; set; }
 
+    public Teacher Teacher { get; set; }    
 
 
 

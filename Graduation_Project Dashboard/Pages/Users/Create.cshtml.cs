@@ -18,6 +18,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Graduation_Project_Dashboard.Areas.Identity.Pages.Account;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using NuGet.Versioning;
+using Microsoft.EntityFrameworkCore;
 
 namespace Graduation_Project_Dashboard.Pages.Users
 {
@@ -53,14 +56,24 @@ namespace Graduation_Project_Dashboard.Pages.Users
             _emailSender = emailSender;
             _roleManager = roleManager;
         }
-
-        public IActionResult OnGet()
+        public IList<User> Users { get; set; }
+        public IActionResult OnGet(string searchInput)
         {
             //ViewData["RoleId"] = new SelectList(_context.Roles.OrderBy(r => r.Name).Where(r => r.Name != "User"), "Id", "Name");
+
+            if (string.IsNullOrWhiteSpace(searchInput))
+            {
+                return Page();
+            }
+
+            // Assuming User is your model and UserName is the property you want to search
+            Users =  _context.Users.Where(u => u.UserName.Contains(searchInput)).ToList();
+
 
             return Page();
         }
 
+        
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -100,7 +113,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             public string Password { get; set; }
 
 
-            [Required, MinLength(1, ErrorMessage = "At least one item required")]
+            [Required, MinLength(1, ErrorMessage = "At least one Role required")]
             [Display(Name = "Roles")]
             public List<string> RoleId { get; set; }
 
@@ -109,6 +122,10 @@ namespace Graduation_Project_Dashboard.Pages.Users
             public string PhoneNumber { get; set; }
 
             public string Address { get; set; }
+
+            [Required(ErrorMessage = "National ID is required")]
+            [RegularExpression(@"^\d{14}$", ErrorMessage = "National ID must be 14 digits")]
+            public string NationalId { get; set; }
 
         }
 
@@ -130,6 +147,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
                 user.EmailConfirmed = true;
                 user.IsActive = true;
                 user.Address=Input.Address;
+                user.NationalId=Input.NationalId;
                 //user.MustChangePassword = true;
 
 

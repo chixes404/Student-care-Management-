@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Graduation_Project.Shared.DTO;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Identity;
@@ -129,22 +128,35 @@ namespace Graduation_Project_Dashboard.Data
 
 
         public DbSet<User> Users { get; set; }
-        public DbSet<UserClaim> UserClaims { get; set; }
-        public DbSet<UserLogin> UserLogins { get; set; }
-        public DbSet<UserToken> UserTokens { get; set; }
+        
         public DbSet<M.Role> Roles { get; set; }
-        public DbSet<RoleClaim> RoleClaims { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-
+        
 
       
         public virtual DbSet<Content> Contents { get; set; }
        
         public virtual DbSet<M.File> Files { get; set; }
-        //public virtual DbSet<Gender> Genders { get; set; }
-     
-        //public virtual DbSet<Profile> Profiles { get; set; }
-      
+        public virtual DbSet<Parent> Parents { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
+
+        public virtual DbSet<School> Schools { get; set; }
+        public virtual DbSet<Teacher> Teachers { get; set; }
+        public virtual DbSet<Wallet> Wallets { get; set; }
+
+        public virtual DbSet<CanteenTransaction> CanteenTransactions { get; set; }
+
+        
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+
+        public virtual DbSet<BlockedProduct> BlockedProducts { get; set; }
+        public virtual DbSet<Grade> Grades { get; set; }
+
+
+
+
+
+
         partial void OnModelCreatingPartialGlobalFilters(ModelBuilder modelBuilder);
         partial void OnModelCreatingPartialDataSeed(ModelBuilder modelBuilder);
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

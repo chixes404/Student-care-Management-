@@ -13,8 +13,6 @@ public partial class Role : IdentityRole<Guid>
     //public string Description { get; set; }
 
 
-    [InverseProperty("Role")]
-    public virtual ICollection<RoleClaim> RoleClaims { get; set; } = new List<RoleClaim>();
 
     [ForeignKey("RoleId")]
     [InverseProperty("Roles")]

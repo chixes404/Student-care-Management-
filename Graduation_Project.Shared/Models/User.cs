@@ -21,6 +21,10 @@ public partial class User : IdentityUser<Guid>
 
     [StringLength(50)]
     public string LastName { get; set; }
+
+    [StringLength(14)]
+    public string? NationalId { get; set; }
+
     public string Address { get; set; }
 
 
@@ -34,26 +38,32 @@ public partial class User : IdentityUser<Guid>
     [Display(Name = "Is Active")]
     public bool IsActive { get; set; }
 
-    
+    [Column("OTP")]
+    [StringLength(6)]
+    public string? Otp { get; set; }
 
-   
+    [Column(TypeName = "datetime")]
+    public DateTime? Expire { get; set; }
 
 
-    
+
+
+
+
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<Content> ContentCreatedByNavigations { get; set; } = new List<Content>();
 
     [InverseProperty("UpdatedByNavigation")]
     public virtual ICollection<Content> ContentUpdatedByNavigations { get; set; } = new List<Content>();
 
-    
+
     //[InverseProperty("CreatedByNavigation")]
     //public virtual ICollection<Gender> GenderCreatedByNavigations { get; set; } = new List<Gender>();
 
     //[InverseProperty("UpdatedByNavigation")]
     //public virtual ICollection<Gender> GenderUpdatedByNavigations { get; set; } = new List<Gender>();
 
-  
+
     //[InverseProperty("CreatedByNavigation")]
     //public virtual ICollection<Profile> ProfileCreatedByNavigations { get; set; } = new List<Profile>();
 
@@ -63,22 +73,33 @@ public partial class User : IdentityUser<Guid>
     //[InverseProperty("User")]
     //public virtual Profile ProfileUser { get; set; }
 
- 
-
-    [InverseProperty("User")]
-    public virtual ICollection<UserClaim> UserClaims { get; set; } = new List<UserClaim>();
 
 
-    [InverseProperty("User")]
-    public virtual ICollection<UserLogin> UserLogins { get; set; } = new List<UserLogin>();
+    [InverseProperty("CreatedByNavigation")]
+    public virtual ICollection<Parent> ParentCreatedByNavigations { get; set; } = new List<Parent>();
 
-    [InverseProperty("User")]
-    public virtual ICollection<UserToken> UserTokens { get; set; } = new List<UserToken>();
+    [InverseProperty("UpdatedByNavigation")]
+    public virtual ICollection<Parent> ParentUpdatedByNavigations { get; set; } = new List<Parent>();
+
 
    
+
+
+    [InverseProperty("CreatedByNavigation")]
+    public virtual ICollection<Teacher> TeacherCreatedByNavigations { get; set; } = new List<Teacher>();
+
+    [InverseProperty("UpdatedByNavigation")]
+    public virtual ICollection<Teacher> TeacherUpdatedByNavigations { get; set; } = new List<Teacher>();
+
+
+
+
+
+
+
+
     [ForeignKey("UserId")]
     [InverseProperty("Users")]
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
-    //public virtual ICollection<UserRole> UserRoles { get; set; }
 }

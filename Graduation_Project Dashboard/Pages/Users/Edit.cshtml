@@ -73,14 +73,14 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label asp-for="User.PhoneNumber" class="control-label"></label>
-                        <input asp-for="User.PhoneNumber" class="form-control" />
-                        <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                        <label asp-for="@Model.User.PhoneNumber" class="control-label"></label>
+                        <input asp-for="@Model.User.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="@Model.User.PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label asp-for="Input.RoleId" class="control-label"></label>
+                            <label asp-for="Input.RoleId" class="control-label"></label>
                         <select asp-for="Input.RoleId" class="form-control multiselect" multiple="multiple" required data-fouc>
                             <option value="bdebdb78-4dc9-40ac-b319-f4e5e7bc3503">Administrator</option>
                             <option data-role="divider"></option>
@@ -95,7 +95,6 @@
                     <div class="form-group">
                         <label class="control-label"> upload new image</label>
                         <input asp-for="Upload" type="file" class="form-control file-input" data-show-upload="false" />
-                        <span asp-validation-for="Upload" class="text-danger"></span>
                     </div>
                 </div>
                 <input type="hidden" asp-for="User.UserName" />
@@ -131,23 +130,23 @@
     </div>
 </form>
 
-@* @section Scripts {
+@section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
 
-        <script>
+        // <script>
 
-            $(document).ready(function () {
-            @foreach (var item in Model.User.UserRoles)
-            {
-               @: $('.multiselect').multiselect('select', '@item.Role.Id');
-            }
-                $('.multiselect').multiselect('destroy');
-                $('.multiselect').multiselect();
-            });
-        </script>
+        //     $(document).ready(function () {
+        //     @foreach (var item in Model.User.)
+        //     {
+        //        @: $('.multiselect').multiselect('select', '@item.Id');
+        //     }
+        //         $('.multiselect').multiselect('destroy');
+        //         $('.multiselect').multiselect();
+        //     });
+        // </script>
 
 
     }
-} *@
+}
 

@@ -32,16 +32,14 @@ namespace Graduation_Project_Dashboard.Pages.Users
             //User = await _context.Users
             //.ToListAsync();
 
-            User = await _context.Users
-                .FromSqlRaw(@"SELECT *
-                                FROM dbo.AspNetUsers
-                                WHERE (Id IN
-                                 (SELECT UserId
-                                 FROM dbo.AspNetUserRoles
-                                 WHERE (RoleId IN
-                                 (SELECT Id
-                                 FROM dbo.AspNetRoles
-                                 WHERE (Name <> N'user')))))").ToListAsync();
+                User = await _context.Users
+                    .FromSqlRaw(@"SELECT u.*
+                  FROM dbo.AspNetUsers u
+                  INNER JOIN dbo.AspNetUserRoles ur ON u.Id = ur.UserId
+                  INNER JOIN dbo.AspNetRoles r ON ur.RoleId = r.Id").ToListAsync();
+
+
+
         }
 
             public String GetUserRole(Guid id)

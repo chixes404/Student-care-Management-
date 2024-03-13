@@ -47,7 +47,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
         public InputModel Input { get; set; }
 
         [BindProperty]
-        public IFormFile Upload { get; set; }
+        public IFormFile ? Upload { get; set; }
         public class InputModel
         {
             [Required, MinLength(1, ErrorMessage = "At least one item required")]
@@ -77,21 +77,30 @@ namespace Graduation_Project_Dashboard.Pages.Users
                 return NotFound();
             }
             User = user;
+            var userRoles = await _userManager.GetRolesAsync(User);
 
+            // Fetch role IDs for the user's roles
+            var roleIds = userRoles.Select(role => _roleManager.Roles.FirstOrDefault(r => r.Name == role)?.Id);
 
-            var usersWithRoles = await _context.Users
-     .FromSqlRaw(@"SELECT *
-                  FROM dbo.AspNetUsers
-                  WHERE (Id IN
-                   (SELECT UserId
-                   FROM dbo.AspNetUserRoles
-                   WHERE (RoleId IN
-                   (SELECT Id
-                   FROM dbo.AspNetRoles
-                   WHERE (Name <> N'user')))))")
-     .ToListAsync();
+            // Remove nulls and convert to List<string>
+            Input = new InputModel
+            {
+                RoleId = roleIds.Where(id => id != null).Select(id => id.ToString()).ToList()
+            };
 
-            ViewData["Roles"] = new SelectList(usersWithRoles.SelectMany(u => u.Roles).ToList(), "Id", "Name");
+            //       var usersWithRoles = await _context.Users
+            //.FromSqlRaw(@"SELECT *
+            //             FROM dbo.AspNetUsers
+            //             WHERE (Id IN
+            //              (SELECT UserId
+            //              FROM dbo.AspNetUserRoles
+            //              WHERE (RoleId IN
+            //              (SELECT Id
+            //              FROM dbo.AspNetRoles
+            //              WHERE (Name <> N'user')))))")
+            //.ToListAsync();
+
+            //ViewData["Roles"] = new SelectList(usersWithRoles.SelectMany(u => u.Roles).ToList(), "Id", "Name");
 
 
             return Page();
@@ -123,7 +132,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             if (Upload != null)
             {
 
-                string[] permittedExtensions = { ".png" };
+                string[] permittedExtensions = { ".png" , "jpg" };
 
                 var ext = Path.GetExtension(Upload.FileName).ToLowerInvariant();
 
