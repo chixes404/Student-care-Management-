@@ -1,0 +1,251 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Students.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+    ViewData["Entity"] = "Students";
+    ViewData["BreadCrumb"] = "<a href='/Students' class='breadcrumb-item'>Students</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+@* <div style="display: flex; flex-direction: column;">
+    <h1>Search for User</h1>
+
+    <form id="searchParentForm" method="post" asp-page-handler="SearchParent">
+        <div class="form-row">
+            <div class="col-6">
+                <input type="text" class="form-control" id="searchInput" name="searchInput" placeholder="Enter National Id">
+            </div>
+
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.SearchUsers != null && Model.SearchUsers.Any())
+    {
+        <h2>Search Results</h2>
+        <form id="selectParentForm" method="post">
+            <div class="form-group">
+                <select class="form-control" name="selectedParentId">
+                    @foreach (var user in Model.SearchUsers)
+                    {
+                        <option value="@user.NationalId">@user.FirstName @user.LastName | @user.Email</option>
+                    }
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Select Parent</button>
+        </form>
+    }
+</div>
+ *@
+
+
+
+<form method="post" id="studentForm" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Create New Student</h5>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.Name" class="control-label"></label>
+                        <input asp-for="Input.Name" class="form-control" />
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </div>
+                </div>
+              
+   
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">Parent National ID</label>
+                        <input asp-for="Input.NationalId" class="form-control" type="text" />
+                        <span asp-validation-for="Input.NationalId" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">Student Age</label>
+                        <input asp-for="Input.Age" class="form-control" type="text" />
+                        <span asp-validation-for="Input.Age" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.DateOfBirth" class="control-label"></label>
+                        <input asp-for="Input.DateOfBirth" type="date" class="form-control" />
+                        <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.GradeId" class="control-label"></label>
+                        <select asp-for="Input.GradeId" class="form-control" data-fouc required>
+                            <option value="">Select Grade</option>
+                            @foreach (var grade in Model.Gradees)
+                            {
+                                <option value="@grade.Id">@grade.GradeTitle</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Input.GradeId" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+               @*  <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.RoleId" class="control-label"></label>
+                        <select asp-for="Input.RoleId" class="form-control multiselect" multiple="multiple" required data-fouc asp-items="ViewBag.RoleId">
+                            <option value="bdebdb78-4dc9-40ac-b319-f4e5e7bc3503">Administrator</option>
+                            <option data-role="divider"></option>
+                            <option value="b4018cb5-755e-468b-9802-a9917c37730e">Teacher</option>
+                            <option value="b1c940d9-1014-48f9-8cd8-a410eb35bc1f">Employee</option>
+                            <option value="ee30e20d-5851-4f96-bc13-6aa7c73ce07c">User</option>
+                        </select>
+                        <span asp-validation-for="Input.RoleId" class="text-danger"></span>
+                    </div>
+                </div>
+ *@
+
+@*  the QrCode *@
+
+             @*    <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label asp-for="Input.QRCodeText"></label>
+                            <!-- Set the value of the input field to the student ID -->
+                            <input asp-for="Input.QRCodeText" class="form-control" />
+                            <span asp-validation-for="Input.QRCodeText" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div> *@
+
+
+
+
+            @* @if (ViewData["QRCodeCodeUri"] != null)
+            {
+                <div>
+                    <h2>Generated QR Code:</h2>
+                    <img src="@ViewData["QRCodeCodeUri"]" alt="QR Code" />
+                </div>
+            } *@
+
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+            <a asp-page="Index" class="btn btn-primary btn-labeled btn-labeled-start">
+                Cancel
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-arrow-left8"></i>
+                </span>
+            </a>
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Create
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+<div id="qrcodeSection" style="display: none;">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Generated QR Code</h5>
+        </div>
+        <div class="card-body">
+            <img id="generatedQRCode" src="" alt="QR Code" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById('studentForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+            var form = this;
+            var formData = new FormData(form);
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            // Update QR code image src
+                            var imageUrl = response.imageUrl;
+                            document.getElementById('generatedQRCode').src = imageUrl;
+
+                            // Show QR code section
+                            document.getElementById('qrcodeSection').style.display = 'block';
+                        } else {
+                            alert('Failed to generate QR code. Please try again.');
+                        }
+                    } else {
+                        alert('Failed to generate QR code. Please try again.');
+                    }
+                }
+            };
+
+            xhr.open('POST', form.action);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.send(formData);
+        });
+    </script>
+
+    <script>
+        function searchUser() {
+            var firstName = document.getElementById("searchFirstName").value;
+            if (firstName.trim() !== "") {
+                // Perform search
+                window.location.href = "/Users/Search?firstName=" + firstName;
+            } else {
+                alert("Please enter a first name to search.");
+            }
+        }
+    </script>
+    <script>
+    $(document).ready(function () {
+        $('#gradeDropdown').change(function () {
+            var selectedGradeId = $(this).val();
+            // Assign the selected GradeId to the GradeId property in your model
+            student.GradeId = selectedGradeId; // Update 'student.GradeId' with your actual object reference
+        });
+    });
+</script>
+
+    <script>
+        document.getElementById('selectParentForm').addEventListener('submit', function () {
+            var searchParentForm = document.getElementById('searchParentForm');
+            searchParentForm.removeAttribute('asp-page-handler');
+        });
+    </script>
+
+
+}

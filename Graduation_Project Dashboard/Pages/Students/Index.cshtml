@@ -1,0 +1,117 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Students.IndexModel
+
+@{
+    ViewData["Title"] = "List";
+    ViewData["Entity"] = "Students";
+    ViewData["BreadCrumb"] = "<a href='/Students' class='breadcrumb-item'>Students</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-header pb-0">
+        <h5 class="mb-0">Students List</h5>
+    </div>
+    <table class="table datatable-users table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].StudentName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].StudentAge)
+                </th>
+                <th>
+                    image
+                </th>
+
+                <th>
+                    QRcode 
+                </th>
+
+                
+                <th>
+                    
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].StudentDOB)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].Active)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].StudentGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].ParentEmail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].ParentMobileNo)
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StudentInfo)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentAge)
+                    </td>
+                    <td>
+                      
+
+                            <img src="/uploads/clinics/2.webp" alt="image" style="width:80px" class="rounded-circle" />
+
+
+
+                    </td>
+                    <td>
+                        @if (item.QRCodeUrl == null)
+                        {
+
+                            <img src="/uploads/clinics/2.webp" alt="image" style="width:80px" class="rounded-circle" />
+
+
+                        }
+                        else
+                        {
+
+                            <img src="@item.QRCodeUrl" alt="QR Code" style="width: 150px; height: 150px; border: 2px solid #000; border-radius: 10px;" />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentDOB)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParentEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParentMobileNo)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" class="text-teal"><i class="icon-pencil7"></i> Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.Id" class="text-primary"><i class="icon-file-text2"></i> Details</a>
+                        |
+                        <a asp-page="./Delete" asp-route-id="@item.Id" class="text-pink"><i class="icon-bin"></i> Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

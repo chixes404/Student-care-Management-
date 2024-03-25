@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.Versioning;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Graduation_Project_Dashboard.Pages.Users
 {
@@ -34,7 +35,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
         private readonly IUserStore<User> _userStore;
         private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly EmailService _emailSender;
         private readonly RoleManager<M.Role> _roleManager;
 
         public CreateModel(Graduation_Project_Dashboard.Data.ApplicationDatabaseContext context,
@@ -43,7 +44,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+            EmailService emailSender,
             RoleManager<M.Role> roleManager)
         {
             _context = context;
@@ -56,22 +57,11 @@ namespace Graduation_Project_Dashboard.Pages.Users
             _emailSender = emailSender;
             _roleManager = roleManager;
         }
-        public IList<User> Users { get; set; }
-        public IActionResult OnGet(string searchInput)
-        {
-            //ViewData["RoleId"] = new SelectList(_context.Roles.OrderBy(r => r.Name).Where(r => r.Name != "User"), "Id", "Name");
 
-            if (string.IsNullOrWhiteSpace(searchInput))
-            {
-                return Page();
-            }
-
-            // Assuming User is your model and UserName is the property you want to search
-            Users =  _context.Users.Where(u => u.UserName.Contains(searchInput)).ToList();
-
-
-            return Page();
-        }
+        //[BindProperty]
+        //public Guid? SelectedParentId { get; set; }
+        //public IList<User> SearchUsers { get; set; }
+       
 
         
 
@@ -91,10 +81,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             [StringLength(50)]
             public string LastName { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+           
             [Required]
             
             [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Please enter a valid e-mail adress")]
@@ -102,10 +89,6 @@ namespace Graduation_Project_Dashboard.Pages.Users
             [PageRemote(PageHandler = "IsExist", AdditionalFields = "Id")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
@@ -127,17 +110,36 @@ namespace Graduation_Project_Dashboard.Pages.Users
             [RegularExpression(@"^\d{14}$", ErrorMessage = "National ID must be 14 digits")]
             public string NationalId { get; set; }
 
+            [Compare("NationalId", ErrorMessage = "The NationalId and confirmation NationalId do not match.")]
+            public string ConfirmNationalId { get; set; }
+
         }
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult>
-            OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
 
             //var User = _context.Users.FirstOrDefault(u => u.Id == _userService.GetCurrentUserID());
 
+
+            //if (!string.IsNullOrWhiteSpace(searchInput))
+            //{
+            //    SearchUsers = _context.Users.Where(u => u.NationalId.Contains(searchInput)).ToList();
+            //}
+
+
+            var CurrentUserId = _userService.GetCurrentUserID();
+
+            var CurrentUser = await _context.Users.FindAsync(CurrentUserId);
+
+
             if (ModelState.IsValid)
             {
+                if (Input.NationalId != Input.ConfirmNationalId)
+                {
+                    ModelState.AddModelError(string.Empty, "National IDs do not match.");
+                    return Page();
+                }
+
                 var user = CreateUser();
 
                 user.FirstName = Input.FirstName;
@@ -146,8 +148,9 @@ namespace Graduation_Project_Dashboard.Pages.Users
                 user.Email = user.UserName;
                 user.EmailConfirmed = true;
                 user.IsActive = true;
-                user.Address=Input.Address;
-                user.NationalId=Input.NationalId;
+                user.Address =Input.Address;
+                user.NationalId =Input.NationalId;
+                user.SchoolId = CurrentUser.SchoolId;
                 //user.MustChangePassword = true;
 
 
@@ -158,11 +161,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
                 if (result.Succeeded)
                 {
-                    //var roles = _context.Roles
-                    //    .Where (r => Input.RoleId.Contains(r.Id.ToString())).ToList();
-
-                    //if (Input.RoleId != null)
-                    //    await _userManager.AddToRolesAsync(user, roles);
+                 
 
                     foreach (string item in Input.RoleId)
                     {
@@ -173,22 +172,40 @@ namespace Graduation_Project_Dashboard.Pages.Users
                         }
                     }
 
-                    //var sb = new StringBuilder();
-                    //sb.Append("<p>Hi " + user.FirstName + " " + user.LastName + ",</p>");
-                    //sb.Append("<p><b>Gilead Stock Management Tool URL: </b>");
-                    //sb.Append($"{this.Request.Scheme}://{this.Request.Host.Value.ToString()}{this.Request.PathBase.Value.ToString()}");
-                    //sb.Append("</p>");
-                    //sb.Append("<p><strong>Username: </strong>");
-                    //sb.Append(user.UserName);
-                    //sb.Append("</p>");
-                    //sb.Append("<p><strong>Password: </strong>");
-                    //sb.Append(Input.Password);
-                    //sb.Append("</p>");
-                    //sb.Append("<p style='color:#FF0000'>" + "You Should Renew Your Password when log into the Application ." + "</p>");
 
-                    //await _emailSender.SendEmailAsync(user.Email, "Your User credentials for Hands Of Hope Management tool", sb.ToString());
 
-                    //_logger.LogInformation("User created a new account with password.");
+
+
+                    // Create the record in the Parent Table
+
+                    if (Input.RoleId.Contains("ee30e20d-5851-4f96-bc13-6aa7c73ce07c"))
+                    {
+                        var parent = new Parent
+                        {
+                            UserId = user.Id,
+                            SchoolId = CurrentUser.SchoolId  //Just Fuckin test this
+                        };
+
+                        _context.Parents.Add(parent);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    var sb = new StringBuilder();
+                    sb.Append("<p>Hi " + user.FirstName + " " + user.LastName + ",</p>");
+                    sb.Append("<p><b>Gilead Stock Management Tool URL: </b>");
+                    sb.Append($"{this.Request.Scheme}://{this.Request.Host.Value.ToString()}{this.Request.PathBase.Value.ToString()}");
+                    sb.Append("</p>");
+                    sb.Append("<p><strong>Username: </strong>");
+                    sb.Append(user.UserName);
+                    sb.Append("</p>");
+                    sb.Append("<p><strong>Password: </strong>");
+                    sb.Append(Input.Password);
+                    sb.Append("</p>");
+                    sb.Append("<p style='color:#FF0000'>" + "You Should Renew Your Password when log into the Application ." + "</p>");
+
+                     _emailSender.SendEmail(user.Email, "Your User credentials for School Care Managment tool", sb.ToString());
+
+                    _logger.LogInformation("User created a new account with password.");
 
                     return RedirectToPage("./Index");
 

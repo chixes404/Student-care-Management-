@@ -20,7 +20,7 @@ namespace Graduation_Project_Dashboard.Data
                 new { Id = new Guid("bdebdb78-4dc9-40ac-b319-f4e5e7bc3503"), Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
                 new { Id = new Guid("b4018cb5-755e-468b-9802-a9917c37730e"), Name = "Teacher", NormalizedName = "TEACHER" },
                 new { Id = new Guid("b1c940d9-1014-48f9-8cd8-a410eb35bc1f"), Name = "Employee", NormalizedName = "EMPLOYEE" },
-                new { Id = new Guid("ee30e20d-5851-4f96-bc13-6aa7c73ce07c"), Name = "User", NormalizedName = "USER" }
+                new { Id = new Guid("ee30e20d-5851-4f96-bc13-6aa7c73ce07c"), Name = "User", NormalizedName = "USER" } //parent
 
 
 

@@ -1,0 +1,126 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Students.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    ViewData["Entity"] = "Students";
+    ViewData["BreadCrumb"] = "<a href='/Students' class='breadcrumb-item'>Students</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Edit Students</h5>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <input type="hidden" asp-for="Student.Id" />
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label  class="control-label"> Name </label>
+                        <input asp-for="Student.Name" class="form-control" />
+                        <span asp-validation-for="Student.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label  class="control-label" > DOB</label>
+                        <input asp-for="Student.DateOfBirth" class="form-control" />
+                        <span asp-validation-for="Student.DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+             
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label  class="control-label"> Age </label>
+                        <input asp-for="Student.age" class="form-control"/>
+                        <span asp-validation-for="Student.age" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group mt-4">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Student.Active" /> @Html.DisplayNameFor(model => model.Student.Active)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <p>Current image</p>
+
+                        @if (Model.Student.ImageURL == null)
+                        {
+
+                            <img src="/uploads/clinics/2.webp" alt="image" style="width:80px" class="rounded-circle" />
+
+
+                        }
+                        else
+                        {
+
+                            <img src="@Model.Student.ImageURL" alt="image" style="width:80px" class="rounded-circle" />
+                        }
+
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">Grade</label>
+                        <select asp-for="SelectedGradeId" class="form-control" data-fouc asp-items="@Model.Grades">
+                            <option value="">Select Grade</option>
+                        </select>
+                        </select>
+                        <span asp-validation-for="SelectedGradeId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label"> upload new image</label>
+                        <input asp-for="Upload" type="file" class="form-control file-input" data-show-upload="false" />
+                    </div>
+                </div>
+                <input type="hidden" asp-for="Student.SchoolId" />
+                <input type="hidden" asp-for="Student.ParentId" />
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+            <a asp-page="Index" class="btn btn-primary btn-labeled btn-labeled-start">
+                Cancel
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-arrow-left8"></i>
+                </span>
+            </a>
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Save
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        // <script>
+
+        //     $(document).ready(function () {
+        //     @foreach (var item in Model.User.)
+        //     {
+        //        @: $('.multiselect').multiselect('select', '@item.Id');
+        //     }
+        //         $('.multiselect').multiselect('destroy');
+        //         $('.multiselect').multiselect();
+        //     });
+        // </script>
+
+
+    }
+}
+

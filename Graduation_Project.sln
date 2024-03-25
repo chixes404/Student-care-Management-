@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graduation_Project.Dashboar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graduation_Project.Shared", "Graduation_Project.Shared\Graduation_Project.Shared.csproj", "{6807B962-E2B2-4742-931E-15B7B25D9574}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graduation_Project.API", "Graduation_Project.API\Graduation_Project.API.csproj", "{BE820A5F-9EAD-415B-9781-04696A42E577}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graduation_Project.API", "Graduation_Project.API\Graduation_Project.API.csproj", "{BE820A5F-9EAD-415B-9781-04696A42E577}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6807B962-E2B2-4742-931E-15B7B25D9574} = {6807B962-E2B2-4742-931E-15B7B25D9574}
 	EndProjectSection

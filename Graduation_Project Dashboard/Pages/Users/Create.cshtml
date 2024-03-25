@@ -8,26 +8,6 @@
     Layout = "~/Pages/Shared/_MasterLayout.cshtml";
 }
 
-<h1>Search for User</h1>
-
-<form method="get">
-    <div class="form-group">
-        <input type="text" class="form-control" id="searchInput" name="searchInput" placeholder="Enter UserName">
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
-
-@if (Model.Users != null && Model.Users.Any())
-{
-    <h2>Search Results</h2>
-    <ul>
-        @foreach (var user in Model.Users)
-        {
-            <li>@user.UserName</li>
-        }
-    </ul>
-}
-
 
 <form method="post">
     <div class="card">
@@ -60,13 +40,25 @@
                         <span id="emailMsg" asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
                 </div>
+
+                  
+
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label asp-for="Input.NationalId" class="control-label"></label>
-                        <input  asp-for="Input.NationalId" class="form-control" type="text" />
+                        <input  asp-for="Input.NationalId" class="form-control"  type="text" />
                         <span  asp-validation-for="Input.NationalId" class="text-danger"></span>
                     </div>
                 </div>
+
+                <div class="col-lg-6">
+                     <div class="form-group">
+                        <label asp-for="Input.ConfirmNationalId"></label>
+                        <input asp-for="Input.ConfirmNationalId" class="form-control" />
+                        <span asp-validation-for="Input.ConfirmNationalId" class="text-danger"></span>
+                     </div>
+                </div>
+
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label asp-for="Input.PhoneNumber" class="control-label"></label>

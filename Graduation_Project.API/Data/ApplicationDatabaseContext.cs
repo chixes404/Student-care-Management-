@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -46,81 +46,6 @@ namespace Graduation_Project.API.Data
             });
 
 
-            //modelBuilder.Entity<Gender>(entity =>
-            //{
-            //    entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-
-            //    entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.GenderCreatedByNavigations).HasConstraintName("FK_Gender_Users");
-
-            //    entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.GenderUpdatedByNavigations).HasConstraintName("FK_Gender_Users1");
-            //});
-
-          
-
-            //modelBuilder.Entity<Profile>(entity =>
-            //{
-            //    entity.Property(e => e.UserId).ValueGeneratedNever();
-
-            //    entity.HasOne(d => d.Insurance).WithMany(p => p.Profiles)
-            //  .OnDelete(DeleteBehavior.ClientSetNull)
-            //  .HasConstraintName("FK_Profile_InsuranceCompany");
-
-            //    entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ProfileCreatedByNavigations)
-            //        .OnDelete(DeleteBehavior.ClientSetNull)
-            //        .HasConstraintName("FK_Profile_Users1");
-
-            //    entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.ProfileUpdatedByNavigations)
-            //        .OnDelete(DeleteBehavior.ClientSetNull)
-            //        .HasConstraintName("FK_Profile_Users");
-            //});
-
-            //modelBuilder.Entity<User>(b =>
-            //{
-            //    // Each User can have many entries in the UserRole join table  
-            //    b.HasMany(e => e.UserRoles)
-            //        .WithOne(e => e.User)
-            //        .HasForeignKey(ur => ur.UserId)
-            //        .IsRequired();
-            //});
-
-            //modelBuilder.Entity<M.Role>(b =>
-            //{
-            //    // Each Role can have many entries in the UserRole join table  
-            //    b.HasMany(e => e.UserRoles)
-            //        .WithOne(e => e.Role)
-            //        .HasForeignKey(ur => ur.RoleId)
-            //        .IsRequired();
-            //});
-
-            //modelBuilder.Entity<M.Role>(entity =>
-            //{
-            //    entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
-            //        .IsUnique()
-            //        .HasFilter("([NormalizedName] IS NOT NULL)");
-
-            //    entity.Property(e => e.Id).ValueGeneratedNever();
-            //});
-
-            //modelBuilder.Entity<User>(entity =>
-            //{
-            //    entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
-            //        .IsUnique()
-            //        .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-            //    entity.Property(e => e.Id).ValueGeneratedNever();
-
-            //    entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-            //        .UsingEntity<Dictionary<string, object>>(
-            //            "UserRole",
-            //            r => r.HasOne<M.Role>().WithMany().HasForeignKey("RoleId"),
-            //            l => l.HasOne<User>().WithMany().HasForeignKey("UserId"),
-            //            j =>
-            //            {
-            //                j.HasKey("UserId", "RoleId");
-            //                j.ToTable("UserRoles");
-            //                j.HasIndex(new[] { "RoleId" }, "IX_UserRoles_RoleId");
-            //            });
-            //});
 
            
         }

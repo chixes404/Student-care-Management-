@@ -57,7 +57,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             if (user != null)
             {
                 User = user;
-                DocumentSetting.DeleteFile(User.ImageURL);
+                //DocumentSetting.DeleteFile(User.ImageURL);
                 _context.Users.Remove(User);
                 await _context.SaveChangesAsync();
             }

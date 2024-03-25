@@ -28,7 +28,7 @@ namespace Graduation_Project.Shared.Models
 
 
         [NotMapped] // Mark as not mapped to database
-        public IFormFile DbFile { get; set; }
+        public IFormFile ?DbFile { get; set; }
         public bool IsPaid { get; set; }  // Indicates whether the school has completed payment
         public DateTime? PaymentDate { get; set; }  // Date of payment
         public decimal PaymentAmount { get; set; }  // Amount paid by the school  PAYPAL
@@ -41,5 +41,6 @@ namespace Graduation_Project.Shared.Models
         public ICollection<Student> Students { get; set; }
         public ICollection<Teacher> Teachers { get; set; }
 
+        public ICollection<User> Users { get; set; }
     }
 }

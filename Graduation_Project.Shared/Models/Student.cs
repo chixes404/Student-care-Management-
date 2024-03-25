@@ -25,6 +25,7 @@ namespace Graduation_Project.Shared.Models
 
         public bool Active { get; set; } = true; // Add a property to indicate active status, 
 
+        public int ? age { get; set; }
 
         [Required]
         [ForeignKey("Parent")]
@@ -32,9 +33,9 @@ namespace Graduation_Project.Shared.Models
 
         [Required]
         [ForeignKey("School")]
-        public int SchoolId { get; set; }
+        public int ? SchoolId { get; set; }
 
-
+        public string ?  QrCodeUrl { get; set; }
 
 
 

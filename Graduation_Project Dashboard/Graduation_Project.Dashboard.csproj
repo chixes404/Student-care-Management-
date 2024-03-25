@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BarCode" Version="2024.3.2" />
     <PackageReference Include="DynamicAuthorization.Mvc.Core" Version="1.2.2" />
     <PackageReference Include="DynamicAuthorization.Mvc.MsSqlServerStore" Version="1.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
@@ -48,6 +49,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Graduation_Project.Shared\Graduation_Project.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\students\" />
   </ItemGroup>
 
 </Project>

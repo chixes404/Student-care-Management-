@@ -123,7 +123,11 @@ namespace Graduation_Project_Dashboard.Pages.Users
                 ModelState.AddModelError("User.Email", "User email already exists");
                 return Page();
             }
+            var CurrentUserId = _userService.GetCurrentUserID();
 
+            var CurrentUser = await _context.Users.FindAsync(CurrentUserId);
+
+            User.SchoolId = CurrentUser.SchoolId;
             if (!ModelState.IsValid)
             {
                 return Page();

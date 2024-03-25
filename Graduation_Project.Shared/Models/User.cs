@@ -46,8 +46,7 @@ public partial class User : IdentityUser<Guid>
     public DateTime? Expire { get; set; }
 
 
-
-
+    public int? SchoolId { get; set; }
 
 
     [InverseProperty("CreatedByNavigation")]
@@ -56,50 +55,16 @@ public partial class User : IdentityUser<Guid>
     [InverseProperty("UpdatedByNavigation")]
     public virtual ICollection<Content> ContentUpdatedByNavigations { get; set; } = new List<Content>();
 
-
-    //[InverseProperty("CreatedByNavigation")]
-    //public virtual ICollection<Gender> GenderCreatedByNavigations { get; set; } = new List<Gender>();
-
-    //[InverseProperty("UpdatedByNavigation")]
-    //public virtual ICollection<Gender> GenderUpdatedByNavigations { get; set; } = new List<Gender>();
-
-
-    //[InverseProperty("CreatedByNavigation")]
-    //public virtual ICollection<Profile> ProfileCreatedByNavigations { get; set; } = new List<Profile>();
-
-    //[InverseProperty("UpdatedByNavigation")]
-    //public virtual ICollection<Profile> ProfileUpdatedByNavigations { get; set; } = new List<Profile>();
-
-    //[InverseProperty("User")]
-    //public virtual Profile ProfileUser { get; set; }
-
-
-
-    [InverseProperty("CreatedByNavigation")]
-    public virtual ICollection<Parent> ParentCreatedByNavigations { get; set; } = new List<Parent>();
-
-    [InverseProperty("UpdatedByNavigation")]
-    public virtual ICollection<Parent> ParentUpdatedByNavigations { get; set; } = new List<Parent>();
-
-
-   
-
-
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<Teacher> TeacherCreatedByNavigations { get; set; } = new List<Teacher>();
 
     [InverseProperty("UpdatedByNavigation")]
     public virtual ICollection<Teacher> TeacherUpdatedByNavigations { get; set; } = new List<Teacher>();
 
-
-
-
-
-
-
-
     [ForeignKey("UserId")]
     [InverseProperty("Users")]
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
+    [ForeignKey("SchoolId")]
+    public virtual School School { get; set; }
 }

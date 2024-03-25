@@ -43,9 +43,10 @@ builder.Services.AddIdentity<User, M.Role>(options => options.SignIn.RequireConf
 
 
 // Add services
+builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddTransient<UserResolverService>();
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+//builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
