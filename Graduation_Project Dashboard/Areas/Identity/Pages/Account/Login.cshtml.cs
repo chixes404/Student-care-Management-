@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Graduation_Project.Shared.Models;
 using Microsoft.Extensions.Logging;
+using Graduation_Project_Dashboard.Services;
 
 namespace Graduation_Project_Dashboard.Areas.Identity.Pages.Account
 {
@@ -22,10 +23,17 @@ namespace Graduation_Project_Dashboard.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserResolverService _userService;
+        private readonly UserManager<User> _userManager;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserResolverService userService, UserManager<User> userManager
+)
         {
             _signInManager = signInManager;
+            _userService = userService;
+            _userManager = userManager;
+
             _logger = logger;
         }
 
@@ -104,14 +112,37 @@ namespace Graduation_Project_Dashboard.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            returnUrl ??= Url.Content("~/reports/dashboard");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                // Check if user exists
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+
+                // Check if user is active
+                if (!user.IsActive)
+                {
+                    ModelState.AddModelError(string.Empty, "Your account is not active.");
+                    return Page();
+                }
+
+                // Check if user has required roles
+                var roles = await _userManager.GetRolesAsync(user);
+                if (!roles.Contains("Administrator") && !roles.Contains("Employee"))
+                {
+                    ModelState.AddModelError(string.Empty, "You don't have permission to login.");
+                    return Page();
+                }
+
+                // Proceed with password validation
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {

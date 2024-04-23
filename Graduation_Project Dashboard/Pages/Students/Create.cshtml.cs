@@ -139,6 +139,8 @@ namespace Graduation_Project_Dashboard.Pages.Students
                 student.DateOfBirth = Input.DateOfBirth;
                 student.QrCodeUrl = null;
                 student.age = Input.Age; 
+                student.CreatedBy=CurrentUserId;
+                student.Created=DateTime.Now;
 
                 _context.Students.Add(student);
                 await _context.SaveChangesAsync();

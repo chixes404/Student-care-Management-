@@ -15,7 +15,7 @@ namespace Graduation_Project.Shared.DTO
 
         public string Email { get; set; }
 
-        public Guid UserId { get; set; }
+        public Guid ?UserId { get; set; }
 
         public int ParentId { get; set; }
 

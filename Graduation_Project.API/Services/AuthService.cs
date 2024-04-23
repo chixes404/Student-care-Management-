@@ -29,7 +29,7 @@ namespace Graduation_Project.API.Services
             _roleManager = roleManager;
             _userService= userService;
 
-		}    
+		}
 
         /*
          * 
@@ -41,35 +41,50 @@ namespace Graduation_Project.API.Services
          * 
          * */
 
-		public async Task<AuthModel> GetTokenAsync(TokenRequestModel model)
-		{
-			var authModel = new AuthModel();
+        public async Task<AuthModel> GetTokenAsync(TokenRequestModel model)
+        {
+            var authModel = new AuthModel();
 
-			var user = await _userService.FindByNationalIDAsync(model.NationalID);  // here userService is Custom it exist in ServicesFolder
+            var user = await _userService.FindByNationalIDAsync(model.NationalID);
 
-			if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
-			{
-				authModel.Message = "National_ID or Password is incorrect!";
-				return authModel;
-			}
+            if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                authModel.Message = "National_ID or Password is incorrect!";
+                return authModel;
+            }
 
-			var jwtSecurityToken = await CreateJwtToken(user);
-			var rolesList = await _userManager.GetRolesAsync(user);
+            // Check if the user is active
+            if (!user.IsActive)
+            {
+                authModel.Message = "User account is not active!";
+                return authModel;
+            }
 
-			authModel.IsAuthenticated = true;
+            // Check if the user has the role "Teacher" or "User"
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (!userRoles.Contains("Teacher") && !userRoles.Contains("User"))
+            {
+                authModel.Message = "You do not have permission to log in!";
+                return authModel;
+            }
+            string roleName = userRoles.FirstOrDefault(); // Get the first role name if exists
+
+            var jwtSecurityToken = await CreateJwtToken(user);
+
+            authModel.IsAuthenticated = true;
             authModel.UserID = user.Id;
-			authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-			authModel.Email = user.Email;
-			authModel.Username = user.UserName;
-			authModel.Expireson = jwtSecurityToken.ValidTo;
-			authModel.Roles = rolesList.ToList();
+            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            authModel.Email = user.Email;
+            authModel.Expireson = jwtSecurityToken.ValidTo;
+            authModel.Roles = roleName;
+            authModel.SchoolId = user.SchoolId;
 
-			return authModel;
-		}
+            return authModel;
+        }
 
 
 
-		public async Task<string> AddRoleAsync(AddRoleModel model)
+        public async Task<string> AddRoleAsync(AddRoleModel model)
 		{
 			var user = await _userManager.FindByIdAsync(model.UserId);
 

@@ -33,27 +33,33 @@ namespace Graduation_Project.API.Controllers
                 {
                     return NotFound($"Parent with ID {parentId} not found.");
                 }
+
+                // Check if the user associated with the parent is active
+                if (!parent.User.IsActive)
+                {
+                    return Unauthorized("User is not active.");
+                }
+
                 var ParentProfile = new ParentWithoutStudentDto
                 {
                     ParentId = parent.Id,
                     Name = $"{parent.User.FirstName} {parent.User.LastName}",
                     PhoneNumber = parent.User.PhoneNumber,
-                    Email = parent.User.Email,
                     UserId = parent.UserId,
+                    Email = parent.User.Email,
                     SchoolId = parent.SchoolId,
                     ImageUrl = parent.User.ImageURL
-                   
                 };
-
-
 
                 return Ok(ParentProfile);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                // Handle any exceptions
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving parent: {ex.Message}");
             }
         }
+
 
 
         // GET: api/parent/{parentId}/Childrens
@@ -75,7 +81,7 @@ namespace Graduation_Project.API.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-        }
+         }
 
 
     }

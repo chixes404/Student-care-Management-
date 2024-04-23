@@ -1,0 +1,87 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Categories.CreateModel
+@using Graduation_Project.Shared.Models;
+
+
+@{
+    ViewData["Title"] = "Create";
+    ViewData["Entity"] = "Categories";
+    ViewData["BreadCrumb"] = "<a href='/Categories' class='breadcrumb-item'>Categories</a>";
+
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+
+
+<form method="post" id="studentForm" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Create New Category</h5>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.Name" class="control-label"></label>
+                        <input asp-for="Input.Name" class="form-control" />
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">Description</label>
+                        <input asp-for="Input.Description" class="form-control" type="text" />
+                        <span asp-validation-for="Input.Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+
+                        <label asp-for="Upload" class="control-label"></label>
+                        <input asp-for="Upload" type="file" class="form-control" />
+                        <span asp-validation-for="Upload" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+            <a asp-page="Index" class="btn btn-primary btn-labeled btn-labeled-start">
+                Cancel
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-arrow-left8"></i>
+                </span>
+            </a>
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Create
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+
+
+}

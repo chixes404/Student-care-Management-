@@ -1,0 +1,267 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Teacher.CreateModel
+@using Graduation_Project.Shared.Models;
+@{
+
+    ViewData["Title"] = "Create";
+    ViewData["Entity"] = "Teacher";
+    ViewData["BreadCrumb"] = "<a href='/Teacher' class='breadcrumb-item'>Teachers</a>";
+    var GradesList = (List<Grade>)ViewData["Grades"];
+    var SubjectsList = (List<Subject>)ViewData["Subjects"];
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+<form method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Create New Teacher</h5>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.FirstName" class="control-label"></label>
+                        <input asp-for="Input.FirstName" class="form-control" />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.LastName" class="control-label"></label>
+                        <input asp-for="Input.LastName" class="form-control" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.Email" class="control-label"></label>
+                        <input asp-for="Input.Email" class="form-control" type="email" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                </div>
+                @*  <div class="col-lg-6">
+                <div class="form-group">
+                <label asp-for="Input.Email" class="control-label"></label>
+                <input id="emailCheck" asp-for="Input.Email" class="form-control" type="email" />
+                <span id="emailMsg" asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                </div> *@
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.NationalId" class="control-label"></label>
+                        <input asp-for="Input.NationalId" class="form-control" type="text" />
+                        <span asp-validation-for="Input.NationalId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmNationalId"></label>
+                        <input asp-for="Input.ConfirmNationalId" class="form-control" />
+                        <span asp-validation-for="Input.ConfirmNationalId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.PhoneNumber" class="control-label"></label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.Address" class="control-label"></label>
+                        <input asp-for="Input.Address" class="form-control" />
+                        <span asp-validation-for="Input.Address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.Password" class="control-label">Password</label>
+                        <span id="password_strength"></span>
+                        <div class="input-group">
+                            <input asp-for="Input.Password" id="txtPassword" onkeyup="CheckPasswordStrength(this.value)" type="text" class="form-control" placeholder="Enter your password" autocomplete="off">
+                            <button type="button" class="btn btn-info " onclick="genPassword()">Generate password</button>
+                            @*<input type="text" id="txtPassword" onkeyup="CheckPasswordStrength(this.value)" />*@
+                            @*<span class="badge password-indicator-badge-absolute"></span>*@
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+
+                <div class="form-group">
+                    <label for="Input.SelectedSubjects" class="control-label">Select Your Subjects</label>
+                    <select asp-for="Input.SelectedSubjects" class="form-control multiselect">
+                        @foreach (var subject in SubjectsList)
+                        {
+                            <option value="@subject.Id">@subject.SubjectName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Input.SelectedSubjects" class="text-danger"></span>
+                </div>
+                </div> 
+                
+                
+                <div class="col-lg-6">
+
+                <div class="form-group">
+                        <label for="Input.SelectedGradeIds" class="control-label">Select Grades</label>
+                    <select asp-for="Input.SelectedGradeIds" class="form-control multiselect">
+                        @foreach (var grade in GradesList)
+                        {
+                            <option value="@grade.Id">@grade.GradeTitle</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Input.SelectedGradeIds" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+
+                        <label asp-for="Upload" class="control-label"></label>
+                        <input asp-for="Upload" type="file" class="form-control" />
+                        <span asp-validation-for="Upload" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+            <a asp-page="Index" class="btn btn-primary btn-labeled btn-labeled-start">
+                Cancel
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-arrow-left8"></i>
+                </span>
+            </a>
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Create
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+
+
+    <script type="text/javascript">
+        function CheckPasswordStrength(password) {
+            var password_strength = document.getElementById("password_strength");
+
+            //TextBox left blank.
+            if (password.length == 0) {
+                password_strength.innerHTML = "";
+                return;
+            }
+            else if (password.length < 6) {
+                password_strength.innerHTML = "<span style='color: red;'> Minimum password length is 6 </span>";
+
+                return;
+            }
+
+            //Regular Expressions.
+            var regex = new Array();
+            regex.push("[A-Z]"); //Uppercase Alphabet.
+            regex.push("[a-z]"); //Lowercase Alphabet.
+            regex.push("[0-9]"); //Digit.
+            regex.push("[$@@$!%*#?&]"); //Special Character.
+
+            var passed = 0;
+
+            //Validate for each Regular Expression.
+            for (var i = 0; i < regex.length; i++) {
+                if (new RegExp(regex[i]).test(password)) {
+                    passed++;
+                }
+            }
+
+            //Validate for length of Password.
+            if (passed > 2 && password.length > 8) {
+                passed++;
+            }
+
+            //Display status.
+            var color = "";
+            var strength = "";
+            switch (passed) {
+                case 0:
+                case 1:
+                    strength = "Weak";
+                    color = "red";
+                    break;
+                case 2:
+                    strength = "Good";
+                    color = "darkorange";
+                    break;
+                case 3:
+                case 4:
+                    strength = "Strong";
+                    color = "green";
+                    break;
+                case 5:
+                    strength = "Very Strong";
+                    color = "darkgreen";
+                    break;
+            }
+            password_strength.innerHTML = strength;
+            password_strength.style.color = color;
+        }
+
+
+
+        var password = document.getElementById("txtPassword");
+
+        function genPassword() {
+            var chars = "0123456789abcdefghijklmnopqrstuvwxyz!@@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var passwordLength = 12;
+            var password = "";
+            for (var i = 0; i <= passwordLength; i++) {
+                var randomNumber = Math.floor(Math.random() * chars.length);
+                password += chars.substring(randomNumber, randomNumber + 1);
+            }
+            document.getElementById("txtPassword").value = password;
+            CheckPasswordStrength(password);
+        }
+
+
+
+        //      document.getElementById('emailCheck').addEventListener('keydown', function () {
+        //          console.log("hi");
+        //     validateEmail();
+        // });
+
+        // function validateEmail() {
+        //     var regx = "/^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/";
+        //     var input = document.getElementById("emailCheck").value;
+        //     var emailMsg = document.getElementById("emailMsg");
+
+        //     if (!regx.test(input)) {
+        //         emailMsg.innerText = "Email is Not Valid";
+        //     } else {
+        //         emailMsg.innerText = ""; // Clear the message if the email is valid
+        //     }
+        //}
+
+    </script>
+}

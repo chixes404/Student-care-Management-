@@ -21,13 +21,17 @@ namespace Graduation_Project.Shared.Models
 
         [Required]
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public Guid ? UserId { get; set; }
 
+        [Required]
 
+        public string Name { get; set; }
         [Required]
         public int ? SchoolId { get; set; }
 
-        //public string NationalID {  get; set; }
+        [Required]
+        public bool IsActive { get; set; }
+        public string ? NationalID { get; set; }
 
         [InverseProperty("Parent")]
         public virtual ICollection<Student> Students { get; set; } = new List<Student>();
@@ -43,13 +47,17 @@ namespace Graduation_Project.Shared.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime Created { get; set; }
 
+        [Required]
+        [Column(Order = 120)]
+        [Display(Name = "Created By")]
+        public Guid CreatedBy { get; set; }
 
         [Required]
         [Column(Order = 130)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime Updated { get; set; }
 
-
+ 
         //[ForeignKey("CreatedBy")]
         //[Display(Name = "Created By")]
         //[InverseProperty("ParentCreatedByNavigations")]

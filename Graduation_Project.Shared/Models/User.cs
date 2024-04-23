@@ -25,7 +25,7 @@ public partial class User : IdentityUser<Guid>
     [StringLength(14)]
     public string? NationalId { get; set; }
 
-    public string Address { get; set; }
+    public string ?Address { get; set; }
 
 
     [StringLength(255)]
@@ -55,16 +55,16 @@ public partial class User : IdentityUser<Guid>
     [InverseProperty("UpdatedByNavigation")]
     public virtual ICollection<Content> ContentUpdatedByNavigations { get; set; } = new List<Content>();
 
-    [InverseProperty("CreatedByNavigation")]
-    public virtual ICollection<Teacher> TeacherCreatedByNavigations { get; set; } = new List<Teacher>();
+    //[InverseProperty("CreatedByNavigation")]
+    //public virtual ICollection<Teacher> TeacherCreatedByNavigations { get; set; } = new List<Teacher>();
 
-    [InverseProperty("UpdatedByNavigation")]
-    public virtual ICollection<Teacher> TeacherUpdatedByNavigations { get; set; } = new List<Teacher>();
+    //[InverseProperty("UpdatedByNavigation")]
+    //public virtual ICollection<Teacher> TeacherUpdatedByNavigations { get; set; } = new List<Teacher>();
 
     [ForeignKey("UserId")]
     [InverseProperty("Users")]
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
     [ForeignKey("SchoolId")]
-    public virtual School School { get; set; }
+    public virtual School? School { get; set; }
 }

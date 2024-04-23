@@ -52,7 +52,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\uploads\Teachers\" />
+    <Folder Include="wwwroot\uploads\parents\" />
     <Folder Include="wwwroot\uploads\students\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Reports\Dashboard.cshtml" />
   </ItemGroup>
 
 </Project>

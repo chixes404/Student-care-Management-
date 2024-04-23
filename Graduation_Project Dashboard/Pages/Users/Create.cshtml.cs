@@ -22,6 +22,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.Versioning;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.Extensions.Hosting;
+using System.Text.RegularExpressions;
 
 namespace Graduation_Project_Dashboard.Pages.Users
 {
@@ -37,6 +39,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
         private readonly ILogger<RegisterModel> _logger;
         private readonly EmailService _emailSender;
         private readonly RoleManager<M.Role> _roleManager;
+        private readonly IWebHostEnvironment _environment;
 
         public CreateModel(Graduation_Project_Dashboard.Data.ApplicationDatabaseContext context,
             UserResolverService userService,
@@ -44,6 +47,8 @@ namespace Graduation_Project_Dashboard.Pages.Users
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
+             IWebHostEnvironment environment,
+
             EmailService emailSender,
             RoleManager<M.Role> roleManager)
         {
@@ -54,6 +59,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
+            this._environment = environment;
             _emailSender = emailSender;
             _roleManager = roleManager;
         }
@@ -67,8 +73,9 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
         [BindProperty]
         public InputModel Input { get; set; }
+        [BindProperty]
+        public IFormFile Upload { get; set; }
 
-        
         public class InputModel
         {
             [Required]
@@ -94,6 +101,10 @@ namespace Graduation_Project_Dashboard.Pages.Users
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
+
+            [Required]
+            [StringLength(255)]
+            public string ImageURL { get; set; }
 
 
             [Required, MinLength(1, ErrorMessage = "At least one Role required")]
@@ -131,6 +142,23 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
             var CurrentUser = await _context.Users.FindAsync(CurrentUserId);
 
+            string[] permittedExtensions = { ".png", ".jpg" };
+
+            var ext = Path.GetExtension(Upload.FileName).ToLowerInvariant();
+
+            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+            {
+                // The extension is invalid ... discontinue processing the file
+                ModelState.AddModelError("user.ImageUrl", "The file extension is invalid");
+                return Page();
+            }
+
+            var SecureFileName = Regex.Replace($"{Input.FirstName.ToLower()}{Input.LastName.ToLower()}", "[^0-9A-Za-z_-]", "") + ext;
+            var file = Path.Combine(_environment.WebRootPath, "uploads\\users", SecureFileName);
+            using (var fileStream = new FileStream(file, FileMode.Create))
+            {
+                await Upload.CopyToAsync(fileStream);
+            }
 
             if (ModelState.IsValid)
             {
@@ -144,6 +172,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.ImageURL = "/uploads/users/" + SecureFileName;
                 user.PhoneNumber = Input.PhoneNumber;
                 user.Email = user.UserName;
                 user.EmailConfirmed = true;
@@ -176,23 +205,10 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
 
 
-                    // Create the record in the Parent Table
-
-                    if (Input.RoleId.Contains("ee30e20d-5851-4f96-bc13-6aa7c73ce07c"))
-                    {
-                        var parent = new Parent
-                        {
-                            UserId = user.Id,
-                            SchoolId = CurrentUser.SchoolId  //Just Fuckin test this
-                        };
-
-                        _context.Parents.Add(parent);
-                        await _context.SaveChangesAsync();
-                    }
 
                     var sb = new StringBuilder();
                     sb.Append("<p>Hi " + user.FirstName + " " + user.LastName + ",</p>");
-                    sb.Append("<p><b>Gilead Stock Management Tool URL: </b>");
+                    sb.Append("<p><b>  Student Care Managment Tool URL: </b>");
                     sb.Append($"{this.Request.Scheme}://{this.Request.Host.Value.ToString()}{this.Request.PathBase.Value.ToString()}");
                     sb.Append("</p>");
                     sb.Append("<p><strong>Username: </strong>");

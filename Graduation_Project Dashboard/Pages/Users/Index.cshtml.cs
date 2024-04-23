@@ -11,6 +11,8 @@ using Graduation_Project_Dashboard.Data;
 using Graduation_Project_Dashboard.Services;
 using Graduation_Project.Shared.Models;
 using Graduation_Project_Dashboard.Data;
+using M = Graduation_Project.Shared.Models;
+
 
 namespace Graduation_Project_Dashboard.Pages.Users
 {

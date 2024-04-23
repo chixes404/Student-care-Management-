@@ -1,0 +1,166 @@
+﻿@page
+@model Graduation_Project.Dashboard.Pages.Teacher.EditModel
+@{
+    ViewData["Title"] = "Edit";
+    ViewData["Entity"] = "Teacher";
+
+    ViewData["BreadCrumb"] = "<a href='/Teacher' class='breadcrumb-item'>Teacher</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Edit Teacher</h5>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <input type="hidden" asp-for="User.Id" />
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.FirstName" class="control-label"></label>
+                        <input asp-for="User.FirstName" class="form-control" />
+                        <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.LastName" class="control-label"></label>
+                        <input asp-for="User.LastName" class="form-control" />
+                        <span asp-validation-for="User.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.NationalId" class="control-label"></label>
+                        <input asp-for="User.NationalId" class="form-control" />
+                        <span asp-validation-for="User.NationalId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.Email" class="control-label"></label>
+                        <input asp-for="User.Email" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="User.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="@Model.User.PhoneNumber" class="control-label"></label>
+                        <input asp-for="@Model.User.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="@Model.User.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.Address" class="control-label"></label>
+                        <input asp-for="User.Address" class="form-control" />
+                        <span asp-validation-for="User.Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="User.SchoolId" class="control-label"></label>
+                        <input asp-for="User.SchoolId" class="form-control" />
+                        <span asp-validation-for="User.SchoolId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group mt-4">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="User.IsActive" /> @Html.DisplayNameFor(model => model.User.IsActive)
+                        </label>
+                    </div>
+                   
+                </div>
+                <!-- Dropdown for selecting subjects -->
+                <div class="col-lg-6">
+
+                    <div class="form-group">
+                        <label asp-for="SelectedSubjects" class="control-label">Select Subjects</label>
+                        <select asp-for="SelectedSubjects" asp-items="@Model.SubjectsList" class="form-control multiselect"></select>
+                        <span asp-validation-for="SelectedSubjects" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Dropdown for selecting grades -->
+                <div class="col-lg-6">
+
+                    <div class="form-group">
+                        <label asp-for="SelectedGradeIds" class="control-label">Select Grades</label>
+                        <select asp-for="SelectedGradeIds" asp-items="@Model.GradesList" class="form-control multiselect"></select>
+                        <span asp-validation-for="SelectedGradeIds" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label"> upload new image</label>
+                        <input asp-for="Upload" type="file" class="form-control file-input" data-show-upload="false" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <p>Current image</p>
+
+                    @if (Model.User.ImageURL == null)
+                    {
+
+                        <img src="/uploads/clinics/2.webp" alt="image" style="width:80px" class="rounded-circle" />
+
+
+                    }
+                    else
+                    {
+
+                        <img src="@Model.User.ImageURL" alt="image" style="width:80px" class="rounded-circle" />
+                    }
+
+
+                </div>
+
+                <input type="hidden" asp-for="User.UserName" />
+
+                <input type="hidden" asp-for="User.EmailConfirmed" />
+                <input type="hidden" asp-for="User.LockoutEnabled" />
+                <input type="hidden" asp-for="User.LockoutEnd" />
+                <input type="hidden" asp-for="User.NormalizedEmail" />
+                <input type="hidden" asp-for="User.NormalizedUserName" />
+                <input type="hidden" asp-for="User.PhoneNumberConfirmed" />
+                <input type="hidden" asp-for="User.SecurityStamp" />
+                <input type="hidden" asp-for="User.PasswordHash" />
+                <input type="hidden" asp-for="User.School" />
+
+                <input type="hidden" asp-for="User.SecurityStamp" />
+                <input type="hidden" asp-for="User.ConcurrencyStamp" />
+                <input type="hidden" asp-for="User.TwoFactorEnabled" />
+                <input type="hidden" asp-for="User.LockoutEnabled" />
+                <input type="hidden" asp-for="User.AccessFailedCount" />
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+            <a asp-page="Index" class="btn btn-primary btn-labeled btn-labeled-start">
+                Cancel
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-arrow-left8"></i>
+                </span>
+            </a>
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Save
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

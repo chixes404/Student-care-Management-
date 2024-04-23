@@ -14,6 +14,12 @@ namespace Graduation_Project.Shared.Models
 
 
         public ICollection<Student> Students { get; set; }
+        public int NumberOfStudents   // iinstead of Student Count Classes
+        {
+            get { return Students.Count; } // Return the private field
+        }
+        public ICollection<TeacherGrade> TeacherGrades { get; set; }
+
 
     }
 }

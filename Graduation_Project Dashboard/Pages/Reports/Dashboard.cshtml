@@ -1,0 +1,1648 @@
+﻿@page
+@model Graduation_Project.Dashboard.Pages.Reports.DashboardModel
+@{
+
+    ViewData["Title"] = "Dashboard";
+    ViewData["Entity"] = "Reports";
+    ViewData["BreadCrumb"] = "<a href='/Reports/dashboard' class='breadcrumb-item'>Reports</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+<!-- Quick stats boxes -->
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Bar chart in colored card -->
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h4 class="mb-0">@Model.UserCount</h4>
+                </div>
+
+                <div>
+                    All Parents										<div class="fs-sm opacity-75">@Model.UserAvg% avg</div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div id="chart_bar_color"></div>
+            </div>
+        </div>
+        <!-- /bar chart in colored card -->
+
+    </div>
+
+
+
+
+    <div class="col-lg-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h4 class="mb-0">@Model.BookingCountToday</h4>
+                    <div class="d-inline-flex ms-auto">
+                        <a class="text-white" data-card-action="reload">
+                            <i class="ph-arrow-clockwise"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    Canteen Transactions Today
+                    <div class="fs-sm opacity-75">@Model.BookingAvgToday % avg</div>
+                </div>
+            </div>
+
+            <div id="line_chart_color"></div>
+        </div>
+        <!-- /line chart in colored card -->
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <!-- Sparklines in colored card -->
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h4 class="mb-0">@Model.StudentCount</h4>
+
+                </div>
+
+                <div>
+                    All Student
+
+                    <div class="fs-sm opacity-75">@Model.StudentAvg% avg</div>
+                </div>
+            </div>
+
+            <div class="rounded-bottom overflow-hidden" id="sparklines_color"></div>
+        </div>
+        <!-- /sparklines in colored card -->
+
+    </div>
+
+</div>
+<!-- /quick stats boxes -->
+<!-- Support tickets -->
+<!-- /support tickets -->
+<!-- Basic columns -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Canteen Transaction / Student's Review </h5>
+    </div>
+
+    <div class="card-body">
+        <div class="chart-container">
+            <div class="chart has-fixed-height" id="columns_basic"></div>
+        </div>
+    </div>
+</div>
+<!-- /basic columns -->
+
+<div class="row">
+    <!-- /nightingale roses (visible labels) -->
+    <div class="col-xl-6">
+
+        <!-- Nightingale roses (visible labels) -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"> Parent Transactions Monthly Review</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="chart-container">
+                    <div class="chart has-fixed-height" id="pie_rose_labels"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /nightingale roses (visible labels) -->
+
+
+    <div class="col-6">
+        <!-- Basic donut -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Student's Grade chart</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="chart-container">
+                    <div class="chart has-fixed-height" id="pie_donut"></div>
+                </div>
+            </div>
+        </div>
+        <!-- /basic donut -->
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header"><h5 class="mb-0">Parent Transaction Calendar</h5></div>
+
+    <div class="card-body">
+        <div id="calendar" class="fullcalendar-basic"></div>
+    </div>
+</div>
+
+
+@{
+    // Convert Model.Bookings to the required format for FullCalendar
+
+    var bookings = Model.CalenderBookings.Select(b => new
+    {
+        id = b.Id,
+        title = Model.getUserNameById(b.ParentId),
+        start = b.TransactionDate.ToString("yyyy-MM-ddTHH:mm:ss"), // Assuming StartDate is a DateTime property
+        end = b.TransactionDate.ToString("yyyy-MM-ddTHH:mm:ss")      // Assuming EndDate is a DateTime property
+    }).ToList();
+
+    var zz = Model.StudentCount.ToString();
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize FullCalendar
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // Initial view of the calendar
+                events: @Html.Raw(Json.Serialize(bookings)), // Load bookings data
+                // You can customize more options here as needed
+            });
+            calendar.render(); // Render the calendar
+        });
+    </script>
+
+}
+
+
+<script>
+    /* ------------------------------------------------------------------------------
+    *
+    *  # Statistics widgets
+    *
+    *  Demo JS code for widgets_stats.html page
+    *
+    * ---------------------------------------------------------------------------- */
+
+
+    // Setup module
+    // ------------------------------
+
+    var StatisticWidgets = function () {
+        //
+        // Setup module components
+        //
+
+        // Simple bar charts
+        var _barChartWidget = function (element, barQty, height, animate, easing, duration, delay, color, tooltip) {
+            if (typeof d3 == 'undefined') {
+                console.warn('Warning - d3.min.js is not loaded.');
+                return;
+            }
+
+
+            // Initialize chart only if element exsists in the DOM
+            if (element) {
+
+
+                // Basic setup
+                // ------------------------------
+                var UserCountsPerMonthJson = @Html.Raw(Json.Serialize(Model.GetUserCountsPerMonth));
+
+
+                // Add data set
+                var bardata = [];
+
+                for (var i = 0; i < UserCountsPerMonthJson.length; i++) {
+                    bardata.push(UserCountsPerMonthJson[i]);
+                }
+
+
+                // Main variables
+                var d3Container = d3.select(element),
+                    width = d3Container.node().getBoundingClientRect().width;
+
+
+
+                // Construct scales
+                // ------------------------------
+
+                // Horizontal
+                var x = d3.scale.ordinal()
+                    .rangeBands([0, width], 0.3);
+
+                // Vertical
+                var y = d3.scale.linear()
+                    .range([0, height]);
+
+
+
+                // Set input domains
+                // ------------------------------
+
+                // Horizontal
+                x.domain(d3.range(0, bardata.length));
+
+                // Vertical
+                y.domain([0, d3.max(bardata)]);
+
+
+
+                // Create chart
+                // ------------------------------
+
+                // Add svg element
+                var container = d3Container.append('svg');
+
+                // Add SVG group
+                var svg = container
+                    .attr('width', width)
+                    .attr('height', height)
+                    .append('g');
+
+
+
+                //
+                // Append chart elements
+                //
+
+                // Bars
+                var bars = svg.selectAll('rect')
+                    .data(bardata)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'd3-random-bars')
+                    .attr('width', x.rangeBand())
+                    .attr('x', function (d, i) {
+                        return x(i);
+                    })
+                    .style('fill', color);
+
+
+
+                // Tooltip
+                // ------------------------------
+
+                // Initiate
+                var tip = d3.tip()
+                    .attr('class', 'd3-tip')
+                    .offset([-5, 0]);
+
+                // Show and hide
+                if (tooltip == "hours" || tooltip == "goal" || tooltip == "members") {
+                    bars.call(tip)
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide);
+                }
+
+                // Daily meetings tooltip content
+                if (tooltip == "hours") {
+                    tip.html(function (d, i) {
+                        return "<div class='text-center'>" +
+                            "<h6 class='mb-0'>" + d + "</h6>" +
+                            "<span class='fs-size-sm'>meetings</span>" +
+                            "<div class='fs-size-sm'>" + i + ":00" + "</div>" +
+                            "</div>";
+                    });
+                }
+
+                // Statements tooltip content
+                if (tooltip == "goal") {
+                    tip.html(function (d, i) {
+                        return "<div class='text-center'>" +
+                            "<h6 class='mb-0'>" + d + "</h6>" +
+                            "<span class='fs-size-sm'>statements</span>" +
+                            "<div class='fs-size-sm'>" + i + ":00" + "</div>" +
+                            "</div>";
+                    });
+                }
+
+                // Online members tooltip content
+                if (tooltip == "members") {
+                    tip.html(function (d, i) {
+                        return "<div class='text-center'>" +
+                            "<h6 class='mb-0'>" + d + "" + "</h6>" +
+                            "<span class='fs-size-sm'>User</span>" +
+                            "<div class='fs-size-sm'>" + "Day :" + i + "</div>" +
+                            "</div>";
+                    });
+                }
+
+
+
+                // Bar loading animation
+                // ------------------------------
+
+                // Choose between animated or static
+                if (animate) {
+                    withAnimation();
+                } else {
+                    withoutAnimation();
+                }
+
+                // Animate on load
+                function withAnimation() {
+                    bars
+                        .attr('height', 0)
+                        .attr('y', height)
+                        .transition()
+                        .attr('height', function (d) {
+                            return y(d);
+                        })
+                        .attr('y', function (d) {
+                            return height - y(d);
+                        })
+                        .delay(function (d, i) {
+                            return i * delay;
+                        })
+                        .duration(duration)
+                        .ease(easing);
+                }
+
+                // Load without animateion
+                function withoutAnimation() {
+                    bars
+                        .attr('height', function (d) {
+                            return y(d);
+                        })
+                        .attr('y', function (d) {
+                            return height - y(d);
+                        });
+                }
+
+
+
+                // Resize chart
+                // ------------------------------
+
+                // Call function on window resize
+                window.addEventListener('resize', barsResize);
+
+                // Call function on sidebar width change
+                var sidebarToggle = document.querySelector('.sidebar-control');
+                sidebarToggle && sidebarToggle.addEventListener('click', barsResize);
+
+                // Resize function
+                //
+                // Since D3 doesn't support SVG resize by default,
+                // we need to manually specify parts of the graph that need to
+                // be updated on window resize
+                function barsResize() {
+
+                    // Layout variables
+                    width = d3Container.node().getBoundingClientRect().width;
+
+
+                    // Layout
+                    // -------------------------
+
+                    // Main svg width
+                    container.attr("width", width);
+
+                    // Width of appended group
+                    svg.attr("width", width);
+
+                    // Horizontal range
+                    x.rangeBands([0, width], 0.3);
+
+
+                    // Chart elements
+                    // -------------------------
+
+                    // Bars
+                    svg.selectAll('.d3-random-bars')
+                        .attr('width', x.rangeBand())
+                        .attr('x', function (d, i) {
+                            return x(i);
+                        });
+                }
+            }
+        };
+
+
+        var _lineChartWidget = function (element, chartHeight, lineColor, pathColor, pointerLineColor, pointerBgColor) {
+            if (typeof d3 == 'undefined') {
+                console.warn('Warning - d3.min.js is not loaded.');
+                return;
+            }
+
+            // Initialize chart only if element exsists in the DOM
+            if (element) {
+
+
+                // Basic setup
+                // ------------------------------
+
+                var BookingCountsPerWeekJson = @Html.Raw(Json.Serialize(Model.CanteenTransactionToday));
+
+
+                // Add data set
+                var dataset = BookingCountsPerWeekJson;
+                // [
+                //    {
+                //        "date": "04/13/14",
+                //        "alpha": "60"
+                //    }, {
+                //        "date": "04/14/14",
+                //        "alpha": "35"
+                //    }, {
+                //        "date": "04/15/14",
+                //        "alpha": "65"
+                //    }, {
+                //        "date": "04/16/14",
+                //        "alpha": "50"
+                //    }, {
+                //        "date": "04/17/14",
+                //        "alpha": "65"
+                //    }, {
+                //        "date": "04/18/14",
+                //        "alpha": "20"
+                //    }, {
+                //        "date": "04/19/14",
+                //        "alpha": "60"
+                //    }
+                // ];
+
+                // Main variables
+                var d3Container = d3.select(element),
+                    margin = { top: 0, right: 0, bottom: 0, left: 0 },
+                    width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right,
+                    height = chartHeight - margin.top - margin.bottom,
+                    padding = 20;
+
+                // Format date
+                var parseDate = d3.time.format("%m/%d/%y").parse,
+                    formatDate = d3.time.format("%a, %B %e");
+
+
+                // Add tooltip
+                // ------------------------------
+
+                var tooltip = d3.tip()
+                    .attr('class', 'd3-tip')
+                    .html(function (d) {
+                        return "<ul class='list-unstyled mb-1'>" +
+                            "<li>" + "<div class='fs-base my-1'><i class='ph-check me-2'></i>" + formatDate(d.date) + "</div>" + "</li>" +
+                            "<li>" + "Booking: &nbsp;" + "<span class='fw-semibold float-end'>" + d.alpha + "</span>" + "</li>" +
+                            "</ul>";
+                    });
+
+
+                // Create chart
+                // ------------------------------
+
+                // Add svg element
+                var container = d3Container.append('svg');
+
+                // Add SVG group
+                var svg = container
+                    .attr('width', width + margin.left + margin.right)
+                    .attr('height', height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .call(tooltip);
+
+
+                // Load data
+                // ------------------------------
+
+                dataset.forEach(function (d) {
+                    d.date = parseDate(d.date);
+                    d.alpha = +d.alpha;
+                });
+
+
+                // Construct scales
+                // ------------------------------
+
+                // Horizontal
+                var x = d3.time.scale()
+                    .range([padding, width - padding]);
+
+                // Vertical
+                var y = d3.scale.linear()
+                    .range([height, 5]);
+
+
+                // Set input domains
+                // ------------------------------
+
+                // Horizontal
+                x.domain(d3.extent(dataset, function (d) {
+                    return d.date;
+                }));
+
+                // Vertical
+                y.domain([0, d3.max(dataset, function (d) {
+                    return Math.max(d.alpha);
+                })]);
+
+
+                // Construct chart layout
+                // ------------------------------
+
+                // Line
+                var line = d3.svg.line()
+                    .x(function (d) {
+                        return x(d.date);
+                    })
+                    .y(function (d) {
+                        return y(d.alpha);
+                    });
+
+
+                //
+                // Append chart elements
+                //
+
+                // Add mask for animation
+                // ------------------------------
+
+                // Add clip path
+                var clip = svg.append("defs")
+                    .append("clipPath")
+                    .attr("id", "clip-line-small");
+
+                // Add clip shape
+                var clipRect = clip.append("rect")
+                    .attr('class', 'clip')
+                    .attr("width", 0)
+                    .attr("height", height);
+
+                // Animate mask
+                clipRect
+                    .transition()
+                    .duration(1000)
+                    .ease('linear')
+                    .attr("width", width);
+
+
+                // Line
+                // ------------------------------
+
+                // Path
+                var path = svg.append('path')
+                    .attr({
+                        'd': line(dataset),
+                        "clip-path": "url(#clip-line-small)",
+                        'class': 'd3-line d3-line-medium'
+                    })
+                    .style('stroke', lineColor);
+
+                // Animate path
+                svg.select('.line-tickets')
+                    .transition()
+                    .duration(1000)
+                    .ease('linear');
+
+
+                // Add vertical guide lines
+                // ------------------------------
+
+                // Bind data
+                var guide = svg.append('g')
+                    .selectAll('.d3-line-guides-group')
+                    .data(dataset);
+
+                // Append lines
+                guide
+                    .enter()
+                    .append('line')
+                    .attr('class', 'd3-line-guides')
+                    .attr('x1', function (d, i) {
+                        return x(d.date);
+                    })
+                    .attr('y1', function (d, i) {
+                        return height;
+                    })
+                    .attr('x2', function (d, i) {
+                        return x(d.date);
+                    })
+                    .attr('y2', function (d, i) {
+                        return height;
+                    })
+                    .style('stroke', pathColor)
+                    .style('stroke-dasharray', '4,2')
+                    .style('shape-rendering', 'crispEdges');
+
+                // Animate guide lines
+                guide
+                    .transition()
+                    .duration(1000)
+                    .delay(function (d, i) { return i * 150; })
+                    .attr('y2', function (d, i) {
+                        return y(d.alpha);
+                    });
+
+
+                // Alpha app points
+                // ------------------------------
+
+                // Add points
+                var points = svg.insert('g')
+                    .selectAll('.d3-line-circle')
+                    .data(dataset)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'd3-line-circle d3-line-circle-medium')
+                    .attr("cx", line.x())
+                    .attr("cy", line.y())
+                    .attr("r", 3)
+                    .style({
+                        'stroke': pointerLineColor,
+                        'fill': pointerBgColor
+                    });
+
+                // Animate points on page load
+                points
+                    .style('opacity', 0)
+                    .transition()
+                    .duration(250)
+                    .ease('linear')
+                    .delay(1000)
+                    .style('opacity', 1);
+
+                // Add user interaction
+                points
+                    .on("mouseover", function (d) {
+                        tooltip.offset([-10, 0]).show(d);
+
+                        // Animate circle radius
+                        d3.select(this).transition().duration(250).attr('r', 4);
+                    })
+
+                    // Hide tooltip
+                    .on("mouseout", function (d) {
+                        tooltip.hide(d);
+
+                        // Animate circle radius
+                        d3.select(this).transition().duration(250).attr('r', 3);
+                    });
+
+                // Change tooltip direction of first point
+                d3.select(points[0][0])
+                    .on("mouseover", function (d) {
+                        tooltip.offset([0, 10]).direction('e').show(d);
+
+                        // Animate circle radius
+                        d3.select(this).transition().duration(250).attr('r', 4);
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.direction('n').hide(d);
+
+                        // Animate circle radius
+                        d3.select(this).transition().duration(250).attr('r', 3);
+                    });
+
+                // Change tooltip direction of last point
+                d3.select(points[0][points.size() - 1])
+                    .on("mouseover", function (d) {
+                        tooltip.offset([0, -10]).direction('w').show(d);
+
+                        // Animate circle radius
+                        d3.select(this).transition().duration(250).attr('r', 4);
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.direction('n').hide(d);
+
+                        // Animate circle radius
+                        d3.select(this).transition().duration(250).attr('r', 3);
+                    });
+
+
+                // Resize chart
+                // ------------------------------
+
+                // Call function on window resize
+                window.addEventListener('resize', lineChartResize);
+
+                // Call function on sidebar width change
+                var sidebarToggle = document.querySelector('.sidebar-control');
+                sidebarToggle && sidebarToggle.addEventListener('click', lineChartResize);
+
+                // Resize function
+                //
+                // Since D3 doesn't support SVG resize by default,
+                // we need to manually specify parts of the graph that need to
+                // be updated on window resize
+                function lineChartResize() {
+
+                    // Layout variables
+                    width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right;
+
+
+                    // Layout
+                    // -------------------------
+
+                    // Main svg width
+                    container.attr("width", width + margin.left + margin.right);
+
+                    // Width of appended group
+                    svg.attr("width", width + margin.left + margin.right);
+
+                    // Horizontal range
+                    x.range([padding, width - padding]);
+
+
+                    // Chart elements
+                    // -------------------------
+
+                    // Mask
+                    clipRect.attr("width", width);
+
+                    // Line path
+                    svg.selectAll('.d3-line').attr("d", line(dataset));
+
+                    // Circles
+                    svg.selectAll('.d3-line-circle').attr("cx", line.x());
+
+                    // Guide lines
+                    svg.selectAll('.d3-line-guides')
+                        .attr('x1', function (d, i) {
+                            return x(d.date);
+                        })
+                        .attr('x2', function (d, i) {
+                            return x(d.date);
+                        });
+                }
+            }
+        };
+
+        // Simple sparklines
+        var _sparklinesWidget = function (element, chartType, qty, chartHeight, interpolation, duration, interval, color) {
+            if (typeof d3 == 'undefined') {
+                console.warn('Warning - d3.min.js is not loaded.');
+                return;
+            }
+
+            // Initialize chart only if element exsists in the DOM
+            if (element) {
+
+
+                // Basic setup
+                // ------------------------------
+
+                // Define main variables
+                var d3Container = d3.select(element),
+                    margin = { top: 0, right: 0, bottom: 0, left: 0 },
+                    width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right,
+                    height = chartHeight - margin.top - margin.bottom;
+
+
+                // Generate random data (for demo only)
+                var data = [];
+                for (var i = 0; i < qty; i++) {
+                    data.push(Math.floor(Math.random() * qty) + 5);
+                }
+
+
+                // Construct scales
+                // ------------------------------
+
+                // Horizontal
+                var x = d3.scale.linear().range([0, width]);
+
+                // Vertical
+                var y = d3.scale.linear().range([height - 5, 5]);
+
+
+                // Set input domains
+                // ------------------------------
+
+                // Horizontal
+                x.domain([1, qty - 3]);
+
+                // Vertical
+                y.domain([0, qty]);
+
+
+                // Construct chart layout
+                // ------------------------------
+
+                // Line
+                var line = d3.svg.line()
+                    .interpolate(interpolation)
+                    .x(function (d, i) { return x(i); })
+                    .y(function (d, i) { return y(d); });
+
+                // Area
+                var area = d3.svg.area()
+                    .interpolate(interpolation)
+                    .x(function (d, i) {
+                        return x(i);
+                    })
+                    .y0(height)
+                    .y1(function (d) {
+                        return y(d);
+                    });
+
+
+                // Create SVG
+                // ------------------------------
+
+                // Container
+                var container = d3Container.append('svg');
+
+                // SVG element
+                var svg = container
+                    .attr('width', width + margin.left + margin.right)
+                    .attr('height', height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+                // Add mask for animation
+                // ------------------------------
+
+                // Add clip path
+                var clip = svg.append("defs")
+                    .append("clipPath")
+                    .attr('id', function (d, i) { return "load-clip-" + element.substring(1); });
+
+                // Add clip shape
+                var clips = clip.append("rect")
+                    .attr('class', 'load-clip')
+                    .attr("width", 0)
+                    .attr("height", height);
+
+                // Animate mask
+                clips
+                    .transition()
+                    .duration(1000)
+                    .ease('linear')
+                    .attr("width", width);
+
+
+                //
+                // Append chart elements
+                //
+
+                // Main path
+                var path = svg.append("g")
+                    .attr("clip-path", function (d, i) { return "url(#load-clip-" + element.substring(1) + ")"; })
+                    .append("path")
+                    .datum(data)
+                    .attr("transform", "translate(" + x(0) + ",0)");
+
+                // Add path based on chart type
+                if (chartType == "area") {
+                    path.attr("d", area).attr('class', 'd3-area').style("fill", color); // area
+                }
+                else {
+                    path.attr("d", line).attr("class", "d3-line d3-line-medium").style('stroke', color); // line
+                }
+
+                // Animate path
+                path
+                    .style('opacity', 0)
+                    .transition()
+                    .duration(500)
+                    .style('opacity', 1);
+
+
+
+                // Set update interval. For demo only
+                // ------------------------------
+
+                setInterval(function () {
+
+                    // push a new data point onto the back
+                    data.push(Math.floor(Math.random() * qty) + 5);
+
+                    // pop the old data point off the front
+                    data.shift();
+
+                    update();
+
+                }, interval);
+
+
+
+                // Update random data. For demo only
+                // ------------------------------
+
+                function update() {
+
+                    // Redraw the path and slide it to the left
+                    path
+                        .attr("transform", null)
+                        .transition()
+                        .duration(duration)
+                        .ease("linear")
+                        .attr("transform", "translate(" + x(0) + ",0)");
+
+                    // Update path type
+                    if (chartType == "area") {
+                        path.attr("d", area).attr('class', 'd3-area').style("fill", color);
+                    }
+                    else {
+                        path.attr("d", line).attr("class", "d3-line d3-line-medium").style('stroke', color);
+                    }
+                }
+
+
+
+                // Resize chart
+                // ------------------------------
+
+                // Call function on window resize
+                window.addEventListener('resize', resizeSparklines);
+
+                // Call function on sidebar width change
+                var sidebarToggle = document.querySelector('.sidebar-control');
+                sidebarToggle && sidebarToggle.addEventListener('click', resizeSparklines);
+
+                // Resize function
+                //
+                // Since D3 doesn't support SVG resize by default,
+                // we need to manually specify parts of the graph that need to
+                // be updated on window resize
+                function resizeSparklines() {
+
+                    // Layout variables
+                    width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right;
+
+
+                    // Layout
+                    // -------------------------
+
+                    // Main svg width
+                    container.attr("width", width + margin.left + margin.right);
+
+                    // Width of appended group
+                    svg.attr("width", width + margin.left + margin.right);
+
+                    // Horizontal range
+                    x.range([0, width]);
+
+
+                    // Chart elements
+                    // -------------------------
+
+                    // Clip mask
+                    clips.attr("width", width);
+
+                    // Line
+                    svg.select(".d3-line").attr("d", line);
+
+                    // Area
+                    svg.select(".d3-area").attr("d", area);
+                }
+            }
+        };
+        //
+        // Return objects assigned to module
+        //
+
+
+
+
+        return {
+            init: function () {
+                _barChartWidget("#chart_bar_color", 24, 50, true, "elastic", 1200, 50, "rgba(255,255,255,0.75)", "members");
+
+                _lineChartWidget('#line_chart_color', 50, '#fff', 'rgba(255,255,255,0.5)', '#fff', '#29B6F6');
+
+                _sparklinesWidget("#sparklines_color", "area", 30, 50, "basis", 750, 2000, "rgba(255,255,255,0.75)");
+
+            }
+        }
+    }();
+
+
+    // Initialize module
+    // ------------------------------
+
+    // When content loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        StatisticWidgets.init();
+    });
+
+</script>
+
+
+<script>
+
+
+    if (@Json.Serialize(Model.ProfileCountsPerMonth) != null) {
+        var profileCountsPerMonthJson = @Html.Raw(Json.Serialize(Model.ProfileCountsPerMonth));
+
+
+    }
+    else {
+        console.log("Empty");
+    }
+
+
+    if (@Json.Serialize(Model.BookingCountsPerYear) != null) {
+        var BookingCountsPerYearJson = @Html.Raw(Json.Serialize(Model.BookingCountsPerYear));
+
+
+    }
+    else {
+        console.log("Empty");
+    }
+
+
+    var EchartsColumnsBasicLight = function () {
+
+
+        //
+        // Setup module components
+        //
+
+        // Basic column chart
+        var _columnsBasicLightExample = function () {
+            if (typeof echarts == 'undefined') {
+                console.warn('Warning - echarts.min.js is not loaded.');
+                return;
+            }
+
+            // Define element
+            var columns_basic_element = document.getElementById('columns_basic');
+
+
+            //
+            // Charts configuration
+            //
+
+            if (columns_basic_element) {
+
+                // Initialize chart
+                var columns_basic = echarts.init(columns_basic_element, null, { renderer: 'svg' });
+
+
+                //
+                // Chart config
+                //
+
+                // Options
+                columns_basic.setOption({
+
+                    // Define colors
+                    color: ['#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80'],
+
+                    // Global text styles
+                    textStyle: {
+                        fontFamily: 'var(--body-font-family)',
+                        color: 'var(--body-color)',
+                        fontSize: 14,
+                        lineHeight: 22,
+                        textBorderColor: 'transparent'
+                    },
+
+                    // Chart animation duration
+                    animationDuration: 750,
+
+                    // Setup grid
+                    grid: {
+                        left: 0,
+                        right: 45,
+                        top: 35,
+                        bottom: 0,
+                        containLabel: true
+                    },
+
+                    // Add legend
+                    legend: {
+                        data: ['Students', 'Transactions'],
+                        itemHeight: 8,
+                        itemGap: 30,
+                        textStyle: {
+                            color: 'var(--body-color)',
+                            padding: [0, 5]
+                        }
+                    },
+
+                    // Add tooltip
+                    tooltip: {
+                        trigger: 'axis',
+                        className: 'shadow-sm rounded',
+                        backgroundColor: 'var(--white)',
+                        borderColor: 'var(--gray-400)',
+                        padding: 15,
+                        textStyle: {
+                            color: '#000'
+                        },
+                        axisPointer: {
+                            type: 'shadow',
+                            shadowStyle: {
+                                color: 'rgba(var(--body-color-rgb), 0.025)'
+                            }
+                        }
+                    },
+
+                    // Horizontal axis
+                    xAxis: [{
+                        type: 'category',
+                        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        axisLabel: {
+                            color: 'rgba(var(--body-color-rgb), .65)'
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: 'var(--gray-500)'
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: 'var(--gray-300)',
+                                type: 'dashed'
+                            }
+                        }
+                    }],
+
+                    // Vertical axis
+                    yAxis: [{
+                        type: 'value',
+                        axisLabel: {
+                            color: 'rgba(var(--body-color-rgb), .65)'
+                        },
+                        axisLine: {
+                            show: true,
+                            lineStyle: {
+                                color: 'var(--gray-500)'
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: 'var(--gray-300)'
+                            }
+                        },
+                        splitArea: {
+                            show: true,
+                            areaStyle: {
+                                color: ['rgba(var(--white-rgb), .01)', 'rgba(var(--black-rgb), .01)']
+                            }
+                        }
+                    }],
+
+                    // Add series
+                    series: [
+                        {
+                            name: 'Students',
+                            type: 'bar',
+                            data: profileCountsPerMonthJson,
+                            itemStyle: {
+                                normal: {
+                                    barBorderRadius: [4, 4, 0, 0],
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        fontWeight: 500,
+                                        fontSize: 12,
+                                        color: 'var(--body-color)'
+                                    }
+                                }
+                            },
+                            markLine: {
+                                data: [{
+                                    type: 'average',
+                                    name: 'Average'
+                                }],
+                                label: {
+                                    color: 'var(--body-color)'
+                                }
+                            }
+                        },
+                        {
+                            name: 'Transactions',
+                            type: 'bar',
+                            data: BookingCountsPerYearJson,
+                            itemStyle: {
+                                normal: {
+                                    barBorderRadius: [4, 4, 0, 0],
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        fontWeight: 500,
+                                        fontSize: 12,
+                                        color: 'var(--body-color)'
+                                    }
+                                }
+                            },
+                            markLine: {
+                                data: [{
+                                    type: 'average',
+                                    name: 'Average'
+                                }],
+                                label: {
+                                    color: 'var(--body-color)'
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+
+
+            //
+            // Resize charts
+            //
+
+            // Resize function
+            var triggerChartResize = function () {
+                columns_basic_element && columns_basic.resize();
+            };
+
+            // On sidebar width change
+            var sidebarToggle = document.querySelectorAll('.sidebar-control');
+            if (sidebarToggle) {
+                sidebarToggle.forEach(function (togglers) {
+                    togglers.addEventListener('click', triggerChartResize);
+                });
+            }
+
+            // On window resize
+            var resizeCharts;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeCharts);
+                resizeCharts = setTimeout(function () {
+                    triggerChartResize();
+                }, 200);
+            });
+        };
+
+
+        //
+        // Return objects assigned to module
+        //
+
+        return {
+            init: function () {
+                _columnsBasicLightExample();
+            }
+        }
+    }();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        EchartsColumnsBasicLight.init();
+    });
+
+
+</script>   @*  Column EChart For Users And Booking *@
+
+<script>
+    var EchartsPieRoseLabelsLight = function () {
+
+
+        //
+        // Setup module components
+        //
+
+        // Rose pie chart with labels
+        var _pieRoseLabelsLightExample = function () {
+            if (typeof echarts == 'undefined') {
+                console.warn('Warning - echarts.min.js is not loaded.');
+                return;
+            }
+
+            // Define element
+            var pie_rose_labels_element = document.getElementById('pie_rose_labels');
+
+
+            //
+            // Charts configuration
+            //
+
+            if (pie_rose_labels_element) {
+
+                // Initialize chart
+                var pie_rose_labels = echarts.init(pie_rose_labels_element, null, { renderer: 'svg' });
+
+
+                //
+                // Chart config
+                //
+
+                // Options
+                pie_rose_labels.setOption({
+
+                    // Colors
+                    color: [
+                        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+                        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+                        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+                        '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+                    ],
+
+                    // Global text styles
+                    textStyle: {
+                        fontFamily: 'var(--body-font-family)',
+                        color: 'var(--body-color)',
+                        fontSize: 14,
+                        lineHeight: 22,
+                        textBorderColor: 'transparent'
+                    },
+
+                    // Add title
+                    title: {
+                        text: 'Parent Transaction review',
+                        subtext: 'Per Month',
+                        left: 'center',
+                        textStyle: {
+                            fontSize: 18,
+                            fontWeight: 500,
+                            color: 'var(--body-color)'
+                        },
+                        subtextStyle: {
+                            fontSize: 12,
+                            color: 'rgba(var(--body-color-rgb), 0.5)'
+                        }
+                    },
+
+                    // Add tooltip
+                    tooltip: {
+                        trigger: 'item',
+                        className: 'shadow-sm rounded',
+                        backgroundColor: 'var(--white)',
+                        borderColor: 'var(--gray-400)',
+                        padding: 15,
+                        textStyle: {
+                            color: '#000'
+                        },
+                        formatter: '{a} <br/>{b}: +{c} ({d}%)'
+                    },
+
+                    // Add legend
+                    legend: {
+                        orient: 'vertical',
+                        top: 'center',
+                        left: 0,
+                        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        itemHeight: 8,
+                        itemWidth: 8,
+                        textStyle: {
+                            color: 'var(--body-color)'
+                        },
+                        itemStyle: {
+                            borderColor: 'transparent'
+                        }
+                    },
+
+                    // Add series
+                    series: [{
+                        name: '',
+                        type: 'pie',
+                        top: 20,
+                        radius: ['15%', '80%'],
+                        center: ['50%', '57.5%'],
+                        roseType: 'radius',
+                        itemStyle: {
+                            borderColor: 'var(--card-bg)'
+                        },
+                        label: {
+                            color: 'var(--body-color)'
+                        },
+                        data: [
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(0) ?? 0), name: 'Jan' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(1) ?? 0), name: 'Feb' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(2) ?? 0), name: 'Mar' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(3) ?? 0), name: 'Apr' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(4) ?? 0), name: 'May' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(5) ?? 0), name: 'Jun' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(6) ?? 0), name: 'Jul' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(7) ?? 0), name: 'Aug' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(8) ?? 0), name: 'Sep' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(9) ?? 0), name: 'Oct' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(10) ?? 0), name: 'Nov' },
+                            { value: @(Model.ParentTransactionCountsPerYear?.ElementAtOrDefault(11) ?? 0), name: 'Dec' },
+                        ]
+
+                    }]
+                });
+            }
+
+
+            //
+            // Resize charts
+            //
+
+            // Resize function
+            var triggerChartResize = function () {
+                pie_rose_labels_element && pie_rose_labels.resize();
+            };
+
+            // On sidebar width change
+            var sidebarToggle = document.querySelectorAll('.sidebar-control');
+            if (sidebarToggle) {
+                sidebarToggle.forEach(function (togglers) {
+                    togglers.addEventListener('click', triggerChartResize);
+                });
+            }
+
+            // On window resize
+            var resizeCharts;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeCharts);
+                resizeCharts = setTimeout(function () {
+                    triggerChartResize();
+                }, 200);
+            });
+        };
+
+
+        //
+        // Return objects assigned to module
+        //
+
+        return {
+            init: function () {
+                _pieRoseLabelsLightExample();
+            }
+        }
+    }();
+
+
+    // Initialize module
+    // ------------------------------
+
+    document.addEventListener('DOMContentLoaded', function () {
+        EchartsPieRoseLabelsLight.init();
+    });
+
+
+
+</script> @* For Pie Chart get all booking per month *@
+
+
+<script>
+
+    var clinicNames = @Html.Raw(Json.Serialize(Model.Grades.Select(clinic => clinic.GradeTitle)));
+    var studentCounts = @Html.Raw(Json.Serialize(Model.GradeCountsPerStudent));
+
+    var EchartsPieDonutLight = function () {
+
+
+        //
+        // Setup module components
+        //
+
+        // Basic donut chart
+        var _scatterPieDonutLightExample = function () {
+            if (typeof echarts == 'undefined') {
+                console.warn('Warning - echarts.min.js is not loaded.');
+                return;
+            }
+
+            // Define element
+            var pie_donut_element = document.getElementById('pie_donut');
+
+
+            //
+            // Charts configuration
+            //
+
+            if (pie_donut_element) {
+
+                // Initialize chart
+                var pie_donut = echarts.init(pie_donut_element, null, { renderer: 'svg' });
+
+
+                //
+                // Chart config
+                //
+
+                // Options
+                pie_donut.setOption({
+
+                    // Colors
+                    color: [
+                        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+                        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+                        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+                        '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+                    ],
+
+                    // Global text styles
+                    textStyle: {
+                        fontFamily: 'var(--body-font-family)',
+                        color: 'var(--body-color)',
+                        fontSize: 14,
+                        lineHeight: 22,
+                        textBorderColor: 'transparent'
+                    },
+
+                    // Add title
+                    title: {
+                        text: 'Grades popularity',
+                        subtext: 'Students / Grade',
+                        left: 'center',
+                        textStyle: {
+                            fontSize: 18,
+                            fontWeight: 500,
+                            color: 'var(--body-color)'
+                        },
+                        subtextStyle: {
+                            fontSize: 12,
+                            color: 'rgba(var(--body-color-rgb), 0.5)'
+                        }
+                    },
+
+                    // Add tooltip
+                    tooltip: {
+                        trigger: 'item',
+                        className: 'shadow-sm rounded',
+                        backgroundColor: 'var(--white)',
+                        borderColor: 'var(--gray-400)',
+                        padding: 15,
+                        textStyle: {
+                            color: '#000'
+                        },
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+
+                    // Add legend
+                    legend: {
+                        orient: 'vertical',
+                        top: 'center',
+                        left: 0,
+                        data: clinicNames,
+                        itemHeight: 8,
+                        itemWidth: 5,
+                        textStyle: {
+                            color: 'var(--body-color)'
+                        },
+                        itemStyle: {
+                            borderColor: 'transparent'
+                        }
+                    },
+
+                    // Add series
+                    series: [{
+                        name: 'Clinic : ',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        center: ['60%', '57.5%'],
+                        itemStyle: {
+                            borderColor: 'var(--card-bg)'
+                        },
+                        label: {
+                            color: 'var(--body-color)'
+                        },
+                        data: [
+    @for (var i = 0; i < Model.Grades.Count; i++)
+    {
+        var gradeTitle = Model.Grades.ElementAtOrDefault(i)?.GradeTitle;
+        var gradeCount = Model.GradeCountsPerStudent.ContainsKey(gradeTitle) ? Model.GradeCountsPerStudent[gradeTitle] : 0;
+        <text>{ value: @gradeCount.ToString(), name: '@gradeTitle' }, </text>
+    }
+                                ]
+
+                    }]
+                });
+            }
+
+
+            //
+            // Resize charts
+            //
+
+            // Resize function
+            var triggerChartResize = function () {
+                pie_donut_element && pie_donut.resize();
+            };
+
+            // On sidebar width change
+            var sidebarToggle = document.querySelectorAll('.sidebar-control');
+            if (sidebarToggle) {
+                sidebarToggle.forEach(function (togglers) {
+                    togglers.addEventListener('click', triggerChartResize);
+                });
+            }
+
+            // On window resize
+            var resizeCharts;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeCharts);
+                resizeCharts = setTimeout(function () {
+                    triggerChartResize();
+                }, 200);
+            });
+        };
+
+
+        //
+        // Return objects assigned to module
+        //
+
+        return {
+            init: function () {
+                _scatterPieDonutLightExample();
+            }
+        }
+    }();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        EchartsPieDonutLight.init();
+    });
+
+</script> @*  For Donut Chart which represent Relation Between Clinics and Booking *@
+
+
+

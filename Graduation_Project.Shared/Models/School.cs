@@ -36,11 +36,11 @@ namespace Graduation_Project.Shared.Models
 
 
 
-        public ICollection<Parent> Parents { get; set; }
+        public ICollection<Parent> ? Parents { get; set; }
 
         public ICollection<Student> Students { get; set; }
         public ICollection<Teacher> Teachers { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public ICollection<User> ? Users { get; set; }
     }
 }

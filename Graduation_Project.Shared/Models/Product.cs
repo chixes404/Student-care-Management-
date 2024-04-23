@@ -16,6 +16,7 @@
 
             public int CategoryId { get; set; }
 
+            public bool IsActive { get; set; }
 
             [StringLength(255)]
             public string? ImageURL { get; set; } /*= "/uploads/clinics/2.webp";*/

@@ -14,13 +14,22 @@ namespace Graduation_Project.Shared.Models
 
         [Required]
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public Guid ? UserId { get; set; }
+
+
+        [Required]
+        public string? Name { get; set; }
+
+
         [Required]
         [ForeignKey("School")]
-        public int SchoolId { get; set; }
 
-        public string NationalID { get; set; }
+        public int? SchoolId { get; set; }
 
+        public string ? NationalID { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; }
 
         [ForeignKey("SchoolId")]
         [InverseProperty("Teachers")]
@@ -33,15 +42,19 @@ namespace Graduation_Project.Shared.Models
         public List<File> UploadedFiles { get; set; }
 
 
-        [ForeignKey("CreatedBy")]
-        [Display(Name = "Created By")]
-        [InverseProperty("TeacherCreatedByNavigations")]
-        public virtual User CreatedByNavigation { get; set; }
+        public ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        public ICollection<TeacherGrade> TeacherGrades { get; set; }
+        public  ICollection<Homework> Homeworks { get; set; }
 
-        [ForeignKey("UpdatedBy")]
-        [Display(Name = "Updated By")]
-        [InverseProperty("TeacherUpdatedByNavigations")]
-        public virtual User UpdatedByNavigation { get; set; }
+        //[ForeignKey("CreatedBy")]
+        //[Display(Name = "Created By")]
+        //[InverseProperty("TeacherCreatedByNavigations")]
+        //public virtual User ? CreatedByNavigation { get; set; }
+
+        //[ForeignKey("UpdatedBy")]
+        //[Display(Name = "Updated By")]
+        //[InverseProperty("TeacherUpdatedByNavigations")]
+        //public virtual User? UpdatedByNavigation { get; set; }
 
 
 

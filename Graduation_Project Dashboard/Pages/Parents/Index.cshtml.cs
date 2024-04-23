@@ -40,14 +40,14 @@ namespace Graduation_Project_Dashboard.Pages.Parents
                    (user, parent) => new UserProfileViewModel
                    {
                        ParentId = parent.Id,
-                       FirstName = user.FirstName + " " + user.LastName,
+                       Name = user.FirstName + " " + user.LastName,
                        Email = user.Email,
                        MobileNumber = user.PhoneNumber,
                        NationalId = user.NationalId,
                        Address = user.Address,
                        UserId = parent.UserId,
                        StudentList = parent.Students.Count,
-                       IsActive = user.IsActive,
+                       IsActive = parent.IsActive,
                        ImageURL = user.ImageURL,
                        SchoolName = user.School.Name
                    }
@@ -57,7 +57,7 @@ namespace Graduation_Project_Dashboard.Pages.Parents
 
         }
 
-        public String GetUserRole(Guid id)
+        public String GetUserRole(Guid ?id)
         {
             List<Role> roles = _context.Roles.FromSqlRaw(@"SELECT dbo.AspNetRoles.Id, dbo.AspNetRoles.Name, dbo.AspNetRoles.NormalizedName, dbo.AspNetRoles.ConcurrencyStamp
                     FROM dbo.AspNetRoles INNER JOIN
@@ -83,14 +83,13 @@ namespace Graduation_Project_Dashboard.Pages.Parents
 
         public class UserProfileViewModel
         {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
+            public string Name { get; set; }
             public string Email { get; set; }
             public string MobileNumber { get; set; }
             public string NationalId { get; set; }
             public string Address { get; set; }
             public int  ParentId { get; set; }
-            public Guid UserId { get; set; }
+            public Guid? UserId { get; set; }
             public int StudentList { get; set; }
 
             public string ImageURL { get; set; }

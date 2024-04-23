@@ -1,0 +1,58 @@
+﻿@page
+@model Graduation_Project_Dashboard.Pages.Subjects.IndexModel
+
+@{
+    ViewData["Title"] = "List";
+    ViewData["Entity"] = "Subjects";
+    ViewData["BreadCrumb"] = "<a href='/Subjects' class='breadcrumb-item'>Subjects</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-header pb-0">
+        <h5 class="mb-0">Subjects List</h5>
+    </div>
+    <table class="table datatable-users table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>Subject ID</th>
+                <th>Name</th>
+                <th>Abbreviation</th>
+                <th>Created</th>
+                <th>Created By</th>
+                <th>Action</th>
+
+           
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Subjects)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubjectAbbreviation)
+                    </td>
+                        <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedBy)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" class="text-teal"><i class="icon-pencil7"></i> Edit</a> |
+                        @*                         <a asp-page="./Details" asp-route-id="@item.Id" class="text-primary"><i class="icon-file-text2"></i> Details</a>
+                    *@
+                        <a asp-page="./Delete" asp-route-id="@item.Id" class="text-pink"><i class="icon-bin"></i> Deactive</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

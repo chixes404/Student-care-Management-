@@ -93,11 +93,19 @@
                         <select asp-for="Input.RoleId" class="form-control multiselect" multiple="multiple" required data-fouc asp-items="ViewBag.RoleId">
                             <option value="bdebdb78-4dc9-40ac-b319-f4e5e7bc3503">Administrator</option>
                             <option data-role="divider"></option>
-                            <option value="b4018cb5-755e-468b-9802-a9917c37730e">Teacher</option>
                             <option value="b1c940d9-1014-48f9-8cd8-a410eb35bc1f">Employee</option>
-                            <option value="ee30e20d-5851-4f96-bc13-6aa7c73ce07c">User</option>
                         </select>
                         <span asp-validation-for="Input.RoleId" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+
+                        <label asp-for="Upload" class="control-label"></label>
+                        <input asp-for="Upload" type="file" class="form-control file-input" required data-show-upload="false" />
+                        <span asp-validation-for="Upload" class="text-danger"></span>
                     </div>
                 </div>
             </div>

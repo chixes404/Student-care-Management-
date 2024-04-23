@@ -28,7 +28,7 @@
             <ul class="nav nav-sidebar" data-nav-type="accordion">
 
                 <li class="nav-item">
-                    <a href="~/" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().Equals("/") ? "active" : "" )">
+                    <a href="~/reports/dashboard" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().Equals("/reports/dashboard") ? "active" : "" )">
                         <i class="ph-house"></i>
                         <span>Home</span>
                     </a>
@@ -67,82 +67,72 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="~/teacher" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/teacher") ? "active" : "" )">
+                            <i class="ph ph-chalkboard-teacher"></i>
+                            <span>Teachers</span>
+                        </a>
+                    </li>
+
                 }
 
-             @*    <!-- Configuration -->
-                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Configuration")))
+                <!-- Configuration -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Employee")))
                 {
                     <li class="nav-item-header pt-0">
                         <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Configuration</div>
                         <i class="ph-dots-three sidebar-resize-show"></i>
                     </li>
+                    
                     <li class="nav-item">
-                        <a href="/clinics" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/clinics") ? "active" : "" )">
-                            <i class="ph-buildings"></i>
-                            <span>Clinics</span>
-                        </a>
-                        <ul class="nav-group-sub collapse">
-                            <li class="nav-item"><a href="javascript:void(0)" class="nav-link active">Default</a></li>
-                            <li class="nav-item"><a href="../../../LTR/material/full/javascript:void(0)" class="nav-link disabled">Material <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
-                            <li class="nav-item"><a href="../../../LTR/clean/full/javascript:void(0)" class="nav-link disabled">Clean <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="~/doctors" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/doctors") ? "active" : "" )">
-                            <i class="ph-address-book"></i>
-                            <span>Doctors</span>
+                        <a href="~/grades" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/grades") ? "active" : "" )">
+                            <i class="ph ph-chalkboard"></i>
+                            <span>Grades</span>
                         </a>
                     </li>
+
+
                     <li class="nav-item">
-                        <a href="~/insurance" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/insurance") ? "active" : "" )">
-                            <i class="ph-identification-card"></i>
-                            <span>Insurance</span>
+                        <a href="" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/classes") ? "active" : "" )">
+                            <i class="ph-chalkboard-teacher"></i>
+                            <span>Classes</span>
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a href="~/vacations" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/vacations") ? "active" : "" )">
-                            <i class="ph-pinwheel"></i>
-                            <span>Vacations</span>
+                        <a href="~/subjects" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/subjects") ? "active" : "" )">
+                            <i class="ph ph-bell-ringing"></i>
+                            <span>Subjects</span>
                         </a>
                     </li>
+
                 }
 
                 <!-- Content -->
-                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Content")))
+              @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Employee")))
                 {
 
                     <li class="nav-item-header pt-0">
-                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Content</div>
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Canteen</div>
                         <i class="ph-dots-three sidebar-resize-show"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="~/blog" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/blog") ? "active" : "" )">
+                        <a href="~/products" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/products") ? "active" : "" )">
                             <i class="ph-newspaper-clipping"></i>
-                            <span>Blog</span>
+                            <span>Products</span>
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a href="~/news" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/news") ? "active" : "" )">
-                            <i class="ph-newspaper"></i>
-                            <span>News</span>
+                        <a href="~/categories" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/categories") ? "active" : "" )">
+                            <i class="ph-newspaper-clipping"></i>
+                            <span>Categories</span>
                         </a>
                     </li>
-                  
-                    <li class="nav-item">
-                        <a href="~/faqs" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/faqs") ? "active" : "" )">
-                            <i class="ph-question"></i>
-                            <span>FAQs</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="~/pages" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/pages") ? "active" : "" )">
-                            <i class="ph-file-text"></i>
-                            <span>Pages</span>
-                        </a>
-                    </li>
+                 
                 }
 
-                <!-- Operations -->
+            @*    <!-- Operations -->
                 @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Operations")))
                 {
                     <li class="nav-item-header pt-0">

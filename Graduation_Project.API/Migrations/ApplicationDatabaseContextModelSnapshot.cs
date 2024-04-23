@@ -137,6 +137,9 @@ namespace Graduation_Project.API.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -286,6 +289,51 @@ namespace Graduation_Project.API.Migrations
                     b.ToTable("Grades");
                 });
 
+            modelBuilder.Entity("Graduation_Project.Shared.Models.Homework", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(110);
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(120);
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GradeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(130);
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(140);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Homeworks");
+                });
+
             modelBuilder.Entity("Graduation_Project.Shared.Models.Parent", b =>
                 {
                     b.Property<int>("Id")
@@ -303,35 +351,62 @@ namespace Graduation_Project.API.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(120);
 
-                    b.Property<string>("NationalID")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SchoolId")
+                    b.Property<string>("NationalID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SchoolId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(130);
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(140);
-
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
                     b.HasIndex("SchoolId");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Parents");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.ParentTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TransactionAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ParentTransactions");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Product", b =>
@@ -364,6 +439,9 @@ namespace Graduation_Project.API.Migrations
                     b.Property<string>("ImageURL")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -548,8 +626,58 @@ namespace Graduation_Project.API.Migrations
                     b.Property<int>("ParentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SchoolId")
+                    b.Property<string>("QrCodeUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SchoolId")
+                        .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(130);
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(140);
+
+                    b.Property<int?>("age")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.Subject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(110);
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(120);
+
+                    b.Property<string>("SubjectAbbreviation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime2")
@@ -561,13 +689,7 @@ namespace Graduation_Project.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("SchoolId");
-
-                    b.ToTable("Students");
+                    b.ToTable("Subject");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Teacher", b =>
@@ -587,11 +709,18 @@ namespace Graduation_Project.API.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(120);
 
-                    b.Property<string>("NationalID")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SchoolId")
+                    b.Property<string>("NationalID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SchoolId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Updated")
@@ -602,20 +731,97 @@ namespace Graduation_Project.API.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(140);
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
                     b.HasIndex("SchoolId");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.TeacherGrade", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(110);
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(120);
+
+                    b.Property<int>("GradeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(130);
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(140);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("TeacherGrade");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.TeacherSubject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(110);
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(120);
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(130);
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(140);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("TeacherSubject");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.User", b =>
@@ -628,7 +834,6 @@ namespace Graduation_Project.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -694,6 +899,9 @@ namespace Graduation_Project.API.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("SchoolId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -713,6 +921,8 @@ namespace Graduation_Project.API.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SchoolId");
 
                     b.HasIndex(new[] { "NormalizedEmail" }, "EmailIndex");
 
@@ -973,23 +1183,22 @@ namespace Graduation_Project.API.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("Graduation_Project.Shared.Models.Parent", b =>
+            modelBuilder.Entity("Graduation_Project.Shared.Models.Homework", b =>
                 {
-                    b.HasOne("Graduation_Project.Shared.Models.User", "CreatedByNavigation")
-                        .WithMany("ParentCreatedByNavigations")
-                        .HasForeignKey("CreatedBy")
+                    b.HasOne("Graduation_Project.Shared.Models.Teacher", "Teacher")
+                        .WithMany("Homeworks")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.Parent", b =>
+                {
                     b.HasOne("Graduation_Project.Shared.Models.School", "School")
                         .WithMany("Parents")
                         .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Graduation_Project.Shared.Models.User", "UpdatedByNavigation")
-                        .WithMany("ParentUpdatedByNavigations")
-                        .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -999,13 +1208,28 @@ namespace Graduation_Project.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatedByNavigation");
-
                     b.Navigation("School");
 
-                    b.Navigation("UpdatedByNavigation");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.ParentTransaction", b =>
+                {
+                    b.HasOne("Graduation_Project.Shared.Models.Parent", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Graduation_Project.Shared.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Product", b =>
@@ -1048,21 +1272,9 @@ namespace Graduation_Project.API.Migrations
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Teacher", b =>
                 {
-                    b.HasOne("Graduation_Project.Shared.Models.User", "CreatedByNavigation")
-                        .WithMany("TeacherCreatedByNavigations")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Graduation_Project.Shared.Models.School", "School")
                         .WithMany("Teachers")
                         .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Graduation_Project.Shared.Models.User", "UpdatedByNavigation")
-                        .WithMany("TeacherUpdatedByNavigations")
-                        .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1072,13 +1284,56 @@ namespace Graduation_Project.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatedByNavigation");
-
                     b.Navigation("School");
 
-                    b.Navigation("UpdatedByNavigation");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.TeacherGrade", b =>
+                {
+                    b.HasOne("Graduation_Project.Shared.Models.Grade", "Grade")
+                        .WithMany("TeacherGrades")
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Graduation_Project.Shared.Models.Teacher", "Teacher")
+                        .WithMany("TeacherGrades")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.TeacherSubject", b =>
+                {
+                    b.HasOne("Graduation_Project.Shared.Models.Subject", "Subject")
+                        .WithMany("TeacherSubjects")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Graduation_Project.Shared.Models.Teacher", "Teacher")
+                        .WithMany("TeacherSubjects")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Graduation_Project.Shared.Models.User", b =>
+                {
+                    b.HasOne("Graduation_Project.Shared.Models.School", "School")
+                        .WithMany("Users")
+                        .HasForeignKey("SchoolId");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Wallet", b =>
@@ -1174,6 +1429,8 @@ namespace Graduation_Project.API.Migrations
             modelBuilder.Entity("Graduation_Project.Shared.Models.Grade", b =>
                 {
                     b.Navigation("Students");
+
+                    b.Navigation("TeacherGrades");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Parent", b =>
@@ -1188,6 +1445,8 @@ namespace Graduation_Project.API.Migrations
                     b.Navigation("Students");
 
                     b.Navigation("Teachers");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Graduation_Project.Shared.Models.Student", b =>
@@ -1200,8 +1459,19 @@ namespace Graduation_Project.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Graduation_Project.Shared.Models.Subject", b =>
+                {
+                    b.Navigation("TeacherSubjects");
+                });
+
             modelBuilder.Entity("Graduation_Project.Shared.Models.Teacher", b =>
                 {
+                    b.Navigation("Homeworks");
+
+                    b.Navigation("TeacherGrades");
+
+                    b.Navigation("TeacherSubjects");
+
                     b.Navigation("UploadedFiles");
                 });
 
@@ -1210,14 +1480,6 @@ namespace Graduation_Project.API.Migrations
                     b.Navigation("ContentCreatedByNavigations");
 
                     b.Navigation("ContentUpdatedByNavigations");
-
-                    b.Navigation("ParentCreatedByNavigations");
-
-                    b.Navigation("ParentUpdatedByNavigations");
-
-                    b.Navigation("TeacherCreatedByNavigations");
-
-                    b.Navigation("TeacherUpdatedByNavigations");
                 });
 #pragma warning restore 612, 618
         }

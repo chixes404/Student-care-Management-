@@ -75,7 +75,8 @@ namespace Graduation_Project.API.Data
 
         public virtual DbSet<BlockedProduct> BlockedProducts { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
-
+        public virtual DbSet<ParentTransaction> ParentTransactions { get; set; }
+        public virtual DbSet<Homework> Homeworks { get; set; }
 
 
 

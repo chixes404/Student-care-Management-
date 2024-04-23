@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Graduation_Project.API.Configuration;
 using Microsoft.OpenApi.Models;
 using Graduation_Project.API.Services;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,8 +58,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
 builder.Services.AddControllers(option =>
 {
@@ -99,6 +99,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddSingleton<TokenService>();
+builder.Services.AddSingleton<CustomerService>();
+builder.Services.AddSingleton<ChargeService>();
 
 builder.Services.AddCors(options =>
 {

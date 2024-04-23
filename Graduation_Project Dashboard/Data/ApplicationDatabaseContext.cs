@@ -47,83 +47,33 @@ namespace Graduation_Project_Dashboard.Data
             });
 
 
-            //modelBuilder.Entity<Gender>(entity =>
-            //{
-            //    entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            modelBuilder.Entity<TeacherSubject>()
+               .HasKey(ts => new { ts.TeacherId, ts.SubjectId });
 
-            //    entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.GenderCreatedByNavigations).HasConstraintName("FK_Gender_Users");
+            modelBuilder.Entity<TeacherSubject>()
+                .HasOne(ts => ts.Teacher)
+                .WithMany(t => t.TeacherSubjects)
+                .HasForeignKey(ts => ts.TeacherId);
 
-            //    entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.GenderUpdatedByNavigations).HasConstraintName("FK_Gender_Users1");
-            //});
+            modelBuilder.Entity<TeacherSubject>()
+                .HasOne(ts => ts.Subject)
+                .WithMany(s => s.TeacherSubjects)
+                .HasForeignKey(ts => ts.SubjectId);
+
+            modelBuilder.Entity<TeacherGrade>()
+                .HasKey(tg => new { tg.TeacherId, tg.GradeId });
+
+            modelBuilder.Entity<TeacherGrade>()
+                .HasOne(tg => tg.Teacher)
+                .WithMany(t => t.TeacherGrades)
+                .HasForeignKey(tg => tg.TeacherId);
+
+            modelBuilder.Entity<TeacherGrade>()
+                .HasOne(tg => tg.Grade)
+                .WithMany(g => g.TeacherGrades)
+                .HasForeignKey(tg => tg.GradeId);
 
           
-
-            //modelBuilder.Entity<Profile>(entity =>
-            //{
-            //    entity.Property(e => e.UserId).ValueGeneratedNever();
-
-            //    entity.HasOne(d => d.Insurance).WithMany(p => p.Profiles)
-            //  .OnDelete(DeleteBehavior.ClientSetNull)
-            //  .HasConstraintName("FK_Profile_InsuranceCompany");
-
-            //    entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ProfileCreatedByNavigations)
-            //        .OnDelete(DeleteBehavior.ClientSetNull)
-            //        .HasConstraintName("FK_Profile_Users1");
-
-            //    entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.ProfileUpdatedByNavigations)
-            //        .OnDelete(DeleteBehavior.ClientSetNull)
-            //        .HasConstraintName("FK_Profile_Users");
-            //});
-
-            //modelBuilder.Entity<User>(b =>
-            //{
-            //    // Each User can have many entries in the UserRole join table  
-            //    b.HasMany(e => e.UserRoles)
-            //        .WithOne(e => e.User)
-            //        .HasForeignKey(ur => ur.UserId)
-            //        .IsRequired();
-            //});
-
-            //modelBuilder.Entity<M.Role>(b =>
-            //{
-            //    // Each Role can have many entries in the UserRole join table  
-            //    b.HasMany(e => e.UserRoles)
-            //        .WithOne(e => e.Role)
-            //        .HasForeignKey(ur => ur.RoleId)
-            //        .IsRequired();
-            //});
-
-            //modelBuilder.Entity<M.Role>(entity =>
-            //{
-            //    entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
-            //        .IsUnique()
-            //        .HasFilter("([NormalizedName] IS NOT NULL)");
-
-            //    entity.Property(e => e.Id).ValueGeneratedNever();
-            //});
-
-            //modelBuilder.Entity<User>(entity =>
-            //{
-            //    entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
-            //        .IsUnique()
-            //        .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-            //    entity.Property(e => e.Id).ValueGeneratedNever();
-
-            //    entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-            //        .UsingEntity<Dictionary<string, object>>(
-            //            "UserRole",
-            //            r => r.HasOne<M.Role>().WithMany().HasForeignKey("RoleId"),
-            //            l => l.HasOne<User>().WithMany().HasForeignKey("UserId"),
-            //            j =>
-            //            {
-            //                j.HasKey("UserId", "RoleId");
-            //                j.ToTable("UserRoles");
-            //                j.HasIndex(new[] { "RoleId" }, "IX_UserRoles_RoleId");
-            //            });
-            //});
-
-           
         }
 
 
@@ -145,12 +95,16 @@ namespace Graduation_Project_Dashboard.Data
 
         public virtual DbSet<CanteenTransaction> CanteenTransactions { get; set; }
 
-        
+        public virtual DbSet<ParentTransaction> ParentTransactions { get; set; }
+
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
 
         public virtual DbSet<BlockedProduct> BlockedProducts { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
+        public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<TeacherGrade> TeacherGrades { get; set; }
+        public virtual DbSet<TeacherSubject> TeacherSubjects { get; set; }
 
 
 
