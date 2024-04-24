@@ -197,11 +197,22 @@ namespace Graduation_Project.Dashboard.Pages.Teacher
                 //_context.Entry(User).State = EntityState.Detached;
                 //_context.Attach(User).State = EntityState.Modified;
                 UserTeacher.IsActive = User.IsActive;
+                UserTeacher.UserId= User.Id;
                 UserTeacher.Updated = DateTime.Now;
                 UserTeacher.NationalID = User.NationalId;
                 UserTeacher.Name = $"{User.FirstName} {User.LastName}";
 
-                _context.Entry(teacher.User).CurrentValues.SetValues(UserTeacher);
+                _context.Attach(UserTeacher).State = EntityState.Modified;
+
+                teacher.User.IsActive = User.IsActive;
+                teacher.User.NationalId = User.NationalId;
+                teacher.User.Address = User.Address;
+               
+                teacher.User.FirstName = User.FirstName;
+                teacher.User.LastName = User.LastName;
+
+
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

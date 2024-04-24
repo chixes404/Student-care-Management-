@@ -4,16 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graduation_Project.Dashboard", "Graduation_Project Dashboard\Graduation_Project.Dashboard.csproj", "{17022532-EC01-4B54-9E93-C6E613F80CB4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6807B962-E2B2-4742-931E-15B7B25D9574} = {6807B962-E2B2-4742-931E-15B7B25D9574}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graduation_Project.Shared", "Graduation_Project.Shared\Graduation_Project.Shared.csproj", "{6807B962-E2B2-4742-931E-15B7B25D9574}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Graduation_Project.API", "Graduation_Project.API\Graduation_Project.API.csproj", "{BE820A5F-9EAD-415B-9781-04696A42E577}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6807B962-E2B2-4742-931E-15B7B25D9574} = {6807B962-E2B2-4742-931E-15B7B25D9574}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

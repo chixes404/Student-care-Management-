@@ -100,7 +100,7 @@ namespace Graduation_Project_Dashboard.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl ??= Url.Content("~/");
+            returnUrl ??= Url.Content("~/reports/dashboard");
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -112,8 +112,7 @@ namespace Graduation_Project_Dashboard.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/reports/dashboard");
-
+            returnUrl ??= Url.Content("~/reports/dashboard"); // Set the default return URL
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
@@ -147,9 +146,9 @@ namespace Graduation_Project_Dashboard.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect("~/reports/dashboard"); 
                 }
-                if (result.RequiresTwoFactor)
+                    if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
