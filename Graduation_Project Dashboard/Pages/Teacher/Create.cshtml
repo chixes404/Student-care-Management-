@@ -7,6 +7,7 @@
     ViewData["Entity"] = "Teacher";
     ViewData["BreadCrumb"] = "<a href='/Teacher' class='breadcrumb-item'>Teachers</a>";
     var GradesList = (List<Grade>)ViewData["Grades"];
+    var ClassesList = (List<Class>)ViewData["Classes"];
     var SubjectsList = (List<Subject>)ViewData["Subjects"];
     Layout = "~/Pages/Shared/_MasterLayout.cshtml";
 }
@@ -124,6 +125,23 @@
                         }
                     </select>
                     <span asp-validation-for="Input.SelectedGradeIds" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-lg-6">
+
+                    <div class="form-group">
+                        <label for="Input.SelectedClassIds" class="control-label">Select Class</label>
+                        <select asp-for="Input.SelectedClassIds" class="form-control multiselect">
+                            @foreach (var classs in ClassesList)
+                            {
+                                <option value="@classs.Id">@classs.ClassTitle</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Input.SelectedClassIds" class="text-danger"></span>
                     </div>
                 </div>
 

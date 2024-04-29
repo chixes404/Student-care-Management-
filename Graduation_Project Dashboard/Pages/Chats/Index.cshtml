@@ -1,0 +1,88 @@
+﻿@page
+@model Graduation_Project.Dashboard.Pages.Chats.IndexModel
+@{
+    ViewData["Title"] = "List";
+    ViewData["Entity"] = "Chats";
+    ViewData["BreadCrumb"] = "<a href='/Chats' class='breadcrumb-item'>Chats</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+}
+<div class="card">
+    <div class="card-header pb-0">
+        <h5 class="mb-0">Chats List</h5>
+    </div>
+    <table class="table datatable table-striped table-hover table-border" id="customTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.Message)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.Created)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.IsRead)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.CreatedBy)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.UpdatedBy)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.UsersWithLatestMessage[0].LatestMessage.Updated)
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.UsersWithLatestMessage)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.Message)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.Created)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.IsRead)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.CreatedBy)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.UpdatedBy)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LatestMessage.Updated)
+                    </td>
+                    <td>
+                      @*   <a asp-page="./Edit" asp-route-id="@item.LatestMessage.UserId" class="text-teal"><i class="icon-pencil7"></i> Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.LatestMessage.UserId" class="text-primary"><i class="icon-file-text2"></i> Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.LatestMessage.UserId" class="text-pink"><i class="icon-bin"></i> Delete</a>| *@
+                        <a asp-page="./History" asp-route-id="@item.LatestMessage.UserId" class="text-teal"><i class="icon-pencil7"></i> Chat History</a> 
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@* Add the following script at the bottom of the page *@
+

@@ -44,6 +44,7 @@ namespace Graduation_Project.Shared.Models
 
         public ICollection<TeacherSubject> TeacherSubjects { get; set; }
         public ICollection<TeacherGrade> TeacherGrades { get; set; }
+        public ICollection<TeacherClass> TeacherClasses { get; set; }
         public  ICollection<Homework> Homeworks { get; set; }
 
         //[ForeignKey("CreatedBy")]

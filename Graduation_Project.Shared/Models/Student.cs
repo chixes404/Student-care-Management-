@@ -19,6 +19,7 @@ namespace Graduation_Project.Shared.Models
         public DateOnly DateOfBirth { get; set; }
 
         public int GradeId { get; set; }
+        public int ClassId { get; set; }
 
         [StringLength(255)]
         public string? ImageURL { get; set; } /*= "/uploads/clinics/2.webp";*/
@@ -53,5 +54,8 @@ namespace Graduation_Project.Shared.Models
 
         [ForeignKey("GradeId")]
         public virtual Grade Grade { get; set; }
+        [ForeignKey("ClassId")]
+
+        public virtual Class Class { get; set; }
     }
 }

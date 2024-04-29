@@ -14,6 +14,7 @@ using Graduation_Project.API.Configuration;
 using Microsoft.OpenApi.Models;
 using Graduation_Project.API.Services;
 using Stripe;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +77,10 @@ builder.Services.AddSwaggerGen(options =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = JwtBearerDefaults.AuthenticationScheme
     });
+
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
+        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Graduation_Project.Shared.Framework;
+using System.Text.Json.Serialization;
 
 namespace Graduation_Project.Shared.Models
 {
@@ -17,7 +18,7 @@ namespace Graduation_Project.Shared.Models
 
         [ForeignKey("Student")]
         public int StudentId { get; set; }
-
+        [JsonIgnore]
         public Student Student { get; set; }
 
         [ForeignKey("Parent")]

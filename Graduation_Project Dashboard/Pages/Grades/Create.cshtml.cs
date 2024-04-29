@@ -23,7 +23,7 @@ using NuGet.Versioning;
 using Microsoft.EntityFrameworkCore;
 using static Graduation_Project_Dashboard.Pages.Grades.CreateModel;
 using System.Reflection.Metadata.Ecma335;
-using IronBarCode;
+//using IronBarCode;
 using Microsoft.AspNetCore.Hosting;
 using System.Drawing;
 using System.IO;
@@ -110,8 +110,6 @@ namespace Graduation_Project_Dashboard.Pages.Grades
 
                 _context.Grades.Add(grade);
                 await _context.SaveChangesAsync();
-
-
 
                 return RedirectToPage("./Index");
 

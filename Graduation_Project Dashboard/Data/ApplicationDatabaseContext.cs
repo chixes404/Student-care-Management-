@@ -73,7 +73,23 @@ namespace Graduation_Project_Dashboard.Data
                 .WithMany(g => g.TeacherGrades)
                 .HasForeignKey(tg => tg.GradeId);
 
-          
+
+
+            modelBuilder.Entity<TeacherClass>()
+         .HasKey(tc => new { tc.TeacherId, tc.ClassId });
+
+            modelBuilder.Entity<TeacherClass>()
+                .HasOne(tc => tc.Teacher)
+                .WithMany(t => t.TeacherClasses)
+                .HasForeignKey(tc => tc.TeacherId);
+
+            modelBuilder.Entity<TeacherClass>()
+                .HasOne(tc => tc.Class)
+                .WithMany(c => c.TeacherClasses)
+                .HasForeignKey(tc => tc.ClassId);
+
+            modelBuilder.Entity<CanteenTransactionProduct>()
+         .HasKey(ctp => new { ctp.CanteenTransactionId, ctp.ProductId });
         }
 
 
@@ -105,6 +121,10 @@ namespace Graduation_Project_Dashboard.Data
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TeacherGrade> TeacherGrades { get; set; }
         public virtual DbSet<TeacherSubject> TeacherSubjects { get; set; }
+        public virtual DbSet<TeacherClass> TeacherClasses { get; set; }
+        public virtual DbSet<Chat> Chats { get; set; }
+        public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<CanteenTransactionProduct> CanteenTransactionProducts { get; set; }
 
 
 

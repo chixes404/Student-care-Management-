@@ -110,6 +110,19 @@
                     </div>
                 </div>
 
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Input.ClassId" class="control-label"></label>
+                        <select asp-for="Input.ClassId" class="form-control" data-fouc required>
+                            <option value="">Select Class</option>
+                            @foreach (var classe in Model.Classes)
+                            {
+                                <option value="@classe.Id">@classe.ClassTitle</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Input.ClassId" class="text-danger"></span>
+                    </div>
+                </div>
 
 
                @*  <div class="col-lg-6">
@@ -186,7 +199,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script>
+    @* <script>
         document.getElementById('studentForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
             var form = this;
@@ -217,28 +230,9 @@
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(formData);
         });
-    </script>
+    </script> *@
 
-    <script>
-        function searchUser() {
-            var firstName = document.getElementById("searchFirstName").value;
-            if (firstName.trim() !== "") {
-                // Perform search
-                window.location.href = "/Users/Search?firstName=" + firstName;
-            } else {
-                alert("Please enter a first name to search.");
-            }
-        }
-    </script>
-    <script>
-    $(document).ready(function () {
-        $('#gradeDropdown').change(function () {
-            var selectedGradeId = $(this).val();
-            // Assign the selected GradeId to the GradeId property in your model
-            student.GradeId = selectedGradeId; // Update 'student.GradeId' with your actual object reference
-        });
-    });
-</script>
+   
 
     <script>
         document.getElementById('selectParentForm').addEventListener('submit', function () {

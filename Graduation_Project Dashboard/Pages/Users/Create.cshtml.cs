@@ -73,9 +73,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
         [BindProperty]
         public InputModel Input { get; set; }
-        [BindProperty]
-        public IFormFile Upload { get; set; }
-
+        
         public class InputModel
         {
             [Required]
@@ -102,10 +100,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
             [Display(Name = "Password")]
             public string Password { get; set; }
 
-            [Required]
-            [StringLength(255)]
-            public string ImageURL { get; set; }
-
+            
 
             [Required, MinLength(1, ErrorMessage = "At least one Role required")]
             [Display(Name = "Roles")]
@@ -137,29 +132,11 @@ namespace Graduation_Project_Dashboard.Pages.Users
             //    SearchUsers = _context.Users.Where(u => u.NationalId.Contains(searchInput)).ToList();
             //}
 
-
             var CurrentUserId = _userService.GetCurrentUserID();
-
             var CurrentUser = await _context.Users.FindAsync(CurrentUserId);
 
-            string[] permittedExtensions = { ".png", ".jpg" };
 
-            var ext = Path.GetExtension(Upload.FileName).ToLowerInvariant();
-
-            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
-            {
-                // The extension is invalid ... discontinue processing the file
-                ModelState.AddModelError("user.ImageUrl", "The file extension is invalid");
-                return Page();
-            }
-
-            var SecureFileName = Regex.Replace($"{Input.FirstName.ToLower()}{Input.LastName.ToLower()}", "[^0-9A-Za-z_-]", "") + ext;
-            var file = Path.Combine(_environment.WebRootPath, "uploads\\users", SecureFileName);
-            using (var fileStream = new FileStream(file, FileMode.Create))
-            {
-                await Upload.CopyToAsync(fileStream);
-            }
-
+          
             if (ModelState.IsValid)
             {
                 if (Input.NationalId != Input.ConfirmNationalId)
@@ -172,7 +149,7 @@ namespace Graduation_Project_Dashboard.Pages.Users
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
-                user.ImageURL = "/uploads/users/" + SecureFileName;
+                
                 user.PhoneNumber = Input.PhoneNumber;
                 user.Email = user.UserName;
                 user.EmailConfirmed = true;

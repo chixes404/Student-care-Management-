@@ -39,6 +39,7 @@ namespace Graduation_Project_Dashboard.Pages.Students
                                        StudentName = student.Name,
                                        StudentDOB = student.DateOfBirth,
                                        StudentGrade = student.Grade.GradeTitle,
+                                       StudentClass = student.Class.ClassTitle,
                                        StudentAge = student.age,
                                        ParentEmail = user.Email,
                                        ParentMobileNo = user.PhoneNumber,
@@ -61,6 +62,7 @@ namespace Graduation_Project_Dashboard.Pages.Students
         public string StudentName { get; set; }
         public DateOnly StudentDOB { get; set; }
         public string StudentGrade { get; set; }
+        public string StudentClass {  get; set; } 
         public int? StudentAge { get; set; }
         public string ParentEmail { get; set; }
 

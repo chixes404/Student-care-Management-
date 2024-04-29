@@ -33,7 +33,7 @@ namespace Graduation_Project_Dashboard.Pages.Grades
         {
 
 
-            Grades = await _context.Grades
+            Grades = await _context.Grades.Include(x=>x.Students)
                 .ToListAsync();
         }
 

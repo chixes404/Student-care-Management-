@@ -14,8 +14,10 @@ namespace Graduation_Project.Shared.Models
         public int? ClassId { get; set; }
         public string? FilePath { get; set; }
 
+         public int? SubjectId { get; set; }
         public string ? Message { get; set; }
         public virtual Teacher Teacher { get; set; }
+        public virtual Subject Subject { get; set; }
 
     }
 }

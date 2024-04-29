@@ -50,8 +50,10 @@ namespace Graduation_Project_Dashboard.Pages.Students
 
         [BindProperty]
         public int SelectedGradeId { get; set; } // Added property for selected grade
+        public int SelectedClassId { get; set; } // Added property for selected grade
 
         public SelectList Grades { get; set; } // Added property for dropdown list
+        public SelectList Classes { get; set; } // Added property for dropdown list
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -62,7 +64,8 @@ namespace Graduation_Project_Dashboard.Pages.Students
 
 
             var student  = await _context.Students
-                .Include(s => s.Grade) // Include the Grade navigation property
+                .Include(s => s.Grade) 
+              
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (student == null)
@@ -72,7 +75,9 @@ namespace Graduation_Project_Dashboard.Pages.Students
             Student = student;
 
             Grades = new SelectList(await _context.Grades.ToListAsync(), "Id", "GradeTitle");
+            Classes = new SelectList(await _context.Classes.ToListAsync(), "Id", "ClassTitle");
             SelectedGradeId = Student.GradeId;
+            SelectedClassId = Student.ClassId;
             return Page();
         }
 
@@ -112,6 +117,7 @@ namespace Graduation_Project_Dashboard.Pages.Students
             /***************************************************************/
 
             Student.GradeId = SelectedGradeId;
+            Student.ClassId = SelectedClassId;
             _context.Attach(Student).State = EntityState.Modified;
 
 

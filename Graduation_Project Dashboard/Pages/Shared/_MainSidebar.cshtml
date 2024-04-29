@@ -77,6 +77,9 @@
                 }
 
 
+              
+
+
                 <!-- Reports -->
                 @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator")))
                 {
@@ -96,7 +99,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="~/canteen_Transaction" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/canteen_Transaction") ? "active" : "" )">
+                        <a href="~/canteen Transaction" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/canteen Transaction") ? "active" : "" )">
                             <i class="ph ph-bell-ringing"></i>
                             <span>Canteen Transaction</span>
                         </a>
@@ -105,6 +108,26 @@
                 }
 
 
+                <!-- Service Support -->
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Employee")))
+                {
+                    <li class="nav-item-header pt-0">
+                        <div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Service Support</div>
+                        <i class="ph-dots-three sidebar-resize-show"></i>
+                    </li>
+
+
+
+
+                    <li class="nav-item">
+                        <a href="~/chats" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/chats") ? "active" : "" )">
+                            <i class="ph-chalkboard-teacher"></i>
+                            <span> Chat</span>
+                        </a>
+                    </li>
+
+
+                }
 
                 <!-- Configuration -->
                 @if (User.Identity.IsAuthenticated && (User.IsInRole("Administrator") || User.IsInRole("Employee")))
@@ -121,6 +144,12 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="~/classes" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/classes") ? "active" : "" )">
+                            <i class="ph ph-chalkboard"></i>
+                            <span>Classes</span>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a href="~/subjects" class="nav-link @(Accessor.HttpContext.Request.Path.Value.ToLower().StartsWith("/subjects") ? "active" : "" )">

@@ -7,8 +7,12 @@
     ViewData["BreadCrumb"] = "<a href='/Reports/dashboard' class='breadcrumb-item'>Reports</a>";
     Layout = "~/Pages/Shared/_MasterLayout.cshtml";
 }
-
-
+    @if (TempData["WelcomeMessage"] != null)
+    {
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"> </script>
+<script type="text/javascript">
+        toastr.success("@TempData["WelcomeMessage"]");</script>
+    }
 <!-- Quick stats boxes -->
 <div class="row">
     <div class="col-lg-4">

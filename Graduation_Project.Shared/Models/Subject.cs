@@ -9,5 +9,7 @@ namespace Graduation_Project.Shared.Models
         public string ? SubjectAbbreviation {  get; set; }
 
         public ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        public ICollection<Homework> Homeworks { get; set; }
+
     }
 }

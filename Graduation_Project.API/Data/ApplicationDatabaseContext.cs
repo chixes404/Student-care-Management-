@@ -45,13 +45,57 @@ namespace Graduation_Project.API.Data
                     .HasConstraintName("FK_Content_Users1");
             });
 
+            modelBuilder.Entity<TeacherSubject>()
+              .HasKey(ts => new { ts.TeacherId, ts.SubjectId });
+
+            modelBuilder.Entity<TeacherSubject>()
+                .HasOne(ts => ts.Teacher)
+                .WithMany(t => t.TeacherSubjects)
+                .HasForeignKey(ts => ts.TeacherId);
+
+            modelBuilder.Entity<TeacherSubject>()
+                .HasOne(ts => ts.Subject)
+                .WithMany(s => s.TeacherSubjects)
+                .HasForeignKey(ts => ts.SubjectId);
+
+            modelBuilder.Entity<TeacherGrade>()
+                .HasKey(tg => new { tg.TeacherId, tg.GradeId });
+
+            modelBuilder.Entity<TeacherGrade>()
+                .HasOne(tg => tg.Teacher)
+                .WithMany(t => t.TeacherGrades)
+                .HasForeignKey(tg => tg.TeacherId);
+
+            modelBuilder.Entity<TeacherGrade>()
+                .HasOne(tg => tg.Grade)
+                .WithMany(g => g.TeacherGrades)
+                .HasForeignKey(tg => tg.GradeId);
 
 
-           
-        }
+
+            modelBuilder.Entity<TeacherClass>()
+         .HasKey(tc => new { tc.TeacherId, tc.ClassId });
+
+            modelBuilder.Entity<TeacherClass>()
+                .HasOne(tc => tc.Teacher)
+                .WithMany(t => t.TeacherClasses)
+                .HasForeignKey(tc => tc.TeacherId);
+
+            modelBuilder.Entity<TeacherClass>()
+                .HasOne(tc => tc.Class)
+                .WithMany(c => c.TeacherClasses)
+                .HasForeignKey(tc => tc.ClassId);
+
+      
+            modelBuilder.Entity<CanteenTransactionProduct>()
+                .HasKey(ctp => new { ctp.CanteenTransactionId, ctp.ProductId });
+        
 
 
-        public DbSet<User> Users { get; set; }
+    }
+
+
+    public DbSet<User> Users { get; set; }
         
         public DbSet<M.Role> Roles { get; set; }
         
@@ -77,8 +121,17 @@ namespace Graduation_Project.API.Data
         public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<ParentTransaction> ParentTransactions { get; set; }
         public virtual DbSet<Homework> Homeworks { get; set; }
+        public virtual DbSet<TeacherGrade> TeacherGrades { get; set; }
+        public virtual DbSet<TeacherSubject> TeacherSubjects { get; set; }
+        public virtual DbSet<TeacherClass> TeacherClasses { get; set; }
+        public virtual DbSet<Chat> Chats { get; set; }
+        public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<CanteenTransactionProduct> CanteenTransactionProducts { get; set; }
 
 
+
+        
 
 
 

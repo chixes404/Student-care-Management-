@@ -132,7 +132,8 @@ namespace Graduation_Project_Dashboard.Pages.Teacher
             [Required(ErrorMessage = "Please select at least one grade.")]
             public List<int> SelectedGradeIds { get; set; }
 
-
+            [Required(ErrorMessage = "Please select at least one class.")]
+            public List<int> SelectedClassIds { get; set; }
 
 
         }
@@ -141,6 +142,7 @@ namespace Graduation_Project_Dashboard.Pages.Teacher
         {
             ViewData["Subjects"] = await _context.Subjects.ToListAsync();
             ViewData["Grades"] = await _context.Grades.ToListAsync();
+            ViewData["Classes"] = await _context.Classes.ToListAsync();
 
             return Page();
         }
@@ -208,6 +210,13 @@ namespace Graduation_Project_Dashboard.Pages.Teacher
                 {
                     var teacherGrade = new TeacherGrade { TeacherId = Teacher.Id, GradeId = gradeId };
                     _context.TeacherGrades.Add(teacherGrade);
+                }
+                await _context.SaveChangesAsync();
+
+                foreach (var classId in Input.SelectedClassIds)
+                {
+                    var teacherClass = new TeacherClass { TeacherId = Teacher.Id, ClassId = classId };
+                    _context.TeacherClasses.Add(teacherClass);
                 }
                 await _context.SaveChangesAsync();
 

@@ -23,7 +23,7 @@ using NuGet.Versioning;
 using Microsoft.EntityFrameworkCore;
 using static Graduation_Project_Dashboard.Pages.Subjects.CreateModel;
 using System.Reflection.Metadata.Ecma335;
-using IronBarCode;
+//using IronBarCode;
 using Microsoft.AspNetCore.Hosting;
 using System.Drawing;
 using System.IO;

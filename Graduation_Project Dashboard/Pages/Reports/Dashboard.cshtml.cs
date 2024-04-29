@@ -23,9 +23,12 @@ namespace Graduation_Project.Dashboard.Pages.Reports
         private readonly ApplicationDatabaseContext _context;
         private readonly UserResolverService _userService;
 
-        public DashboardModel(ApplicationDatabaseContext context)
+
+        public DashboardModel(ApplicationDatabaseContext context, UserResolverService userService)
         {
             _context = context;
+            _userService = userService;
+
         }
 
 
@@ -255,12 +258,14 @@ namespace Graduation_Project.Dashboard.Pages.Reports
 
 
 
+            var CurrentUserId = _userService.GetCurrentUserID();
+
+            var CurrentUser = await _context.Users.FindAsync(CurrentUserId);
 
 
 
 
-
-
+            TempData["WelcomeMessage"] = $"Hello {CurrentUser.FirstName}";
 
 
 
@@ -570,6 +575,7 @@ namespace Graduation_Project.Dashboard.Pages.Reports
         //}
 
 
+       
 
 
 

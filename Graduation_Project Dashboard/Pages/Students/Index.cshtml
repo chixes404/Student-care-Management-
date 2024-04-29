@@ -46,6 +46,9 @@
                     @Html.DisplayNameFor(model => model.StudentInfo[0].StudentGrade)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.StudentInfo[0].StudentClass)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.StudentInfo[0].ParentEmail)
                 </th>
                 <th>
@@ -97,6 +100,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.StudentGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentClass)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ParentEmail)

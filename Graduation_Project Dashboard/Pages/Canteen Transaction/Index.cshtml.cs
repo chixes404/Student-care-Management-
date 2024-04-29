@@ -14,7 +14,7 @@ using Graduation_Project_Dashboard.Data;
 using M = Graduation_Project.Shared.Models;
 
 
-namespace Graduation_Project_Dashboard.Pages.Canteen_Transaction
+namespace Graduation_Project_Dashboard.Pages.CanteenTransaction
 {
     [Authorize(Roles = "Administrator")]
     public class IndexModel : BasePageModel<IndexModel>
@@ -22,9 +22,10 @@ namespace Graduation_Project_Dashboard.Pages.Canteen_Transaction
         private readonly ApplicationDatabaseContext _context;
         private readonly UserResolverService _userService;
 
-        public IndexModel(ApplicationDatabaseContext context)
+        public IndexModel(ApplicationDatabaseContext context ,  UserResolverService userService)
         {
             _context = context;
+            _userService = userService; 
         }
 
         public IList<M.CanteenTransaction> CanteenTransactions { get; set; } = default!;

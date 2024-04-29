@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Graduation_Project Dashboard\Graduation_Project.Dashboard.csproj" />
     <ProjectReference Include="..\Graduation_Project.Shared\Graduation_Project.Shared.csproj" />
   </ItemGroup>
 

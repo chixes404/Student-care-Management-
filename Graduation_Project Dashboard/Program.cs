@@ -1,3 +1,4 @@
+
 using Graduation_Project.Shared.Models;
 using Graduation_Project_Dashboard.Data;
 using Graduation_Project_Dashboard.Services;
@@ -77,5 +78,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
 app.Run();

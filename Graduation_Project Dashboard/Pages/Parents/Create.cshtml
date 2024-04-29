@@ -113,7 +113,7 @@
                     <i class="icon-arrow-left8"></i>
                 </span>
             </a>
-            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+            <button type="submit" id="createButton" class="btn btn-primary btn-labeled btn-labeled-end">
                 Create
                 <span class="btn-labeled-icon bg-black bg-opacity-20">
                     <i class="icon-paperplane"></i>
@@ -122,6 +122,14 @@
         </div>
     </div>
 </form>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"> </script>
+<script type="text/javascript">
+    document.getElementById('createButton').addEventListener('click', function () {
+        toastr.success("New Parent Added");
+    });
+
+</script>
 
 @section Scripts {
     @{

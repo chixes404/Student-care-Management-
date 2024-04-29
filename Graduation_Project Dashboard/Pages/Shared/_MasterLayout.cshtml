@@ -13,8 +13,10 @@
     <link href="~/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
     <link href="~/icons/fontawesome/styles.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
     <link href="~/css/ltr/all.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
-    <link href="~/css/animate.min.css"  rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/css/animate.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
     @* <link href="~/css/fileinput.min.css" rel="stylesheet" type="text/css" /> *@
+
 
     <!-- /global stylesheets -->
     @await RenderSectionAsync("Styles", required: false)
@@ -41,8 +43,9 @@
     <script src="~/scripts/app.js" asp-append-version="true"></script>
     <script src="~/scripts/custom.js" asp-append-version="true"></script>
     <!-- /theme JS files -->
+   
     @await RenderSectionAsync("Scripts", required: false)
-
+  
 </head>
 <body>
 

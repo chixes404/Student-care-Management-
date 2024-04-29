@@ -21,6 +21,7 @@ namespace Graduation_Project.Shared.DTO
 
         public int ?SchoolId { get; set; }
 
+        public string SchoolName {  get; set; }
         public string ImageUrl { get; set; }
     }
 }

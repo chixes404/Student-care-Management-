@@ -72,10 +72,20 @@
                         <select asp-for="SelectedGradeId" class="form-control" data-fouc asp-items="@Model.Grades">
                             <option value="">Select Grade</option>
                         </select>
-                        </select>
                         <span asp-validation-for="SelectedGradeId" class="text-danger"></span>
                     </div>
                 </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label">Class</label>
+                        <select asp-for="SelectedClassId" class="form-control" data-fouc asp-items="@Model.Classes">
+                            <option value="">Select Class</option>
+                        </select>
+                        <span asp-validation-for="SelectedClassId" class="text-danger"></span>
+                    </div>
+                </div>
+
 
                 <div class="col-lg-6">
                     <div class="form-group">

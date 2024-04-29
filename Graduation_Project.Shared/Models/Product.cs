@@ -3,9 +3,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
+using System.Text.Json.Serialization;
+
+using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 
     namespace Graduation_Project.Shared.Models
     {
@@ -27,7 +29,11 @@
 
             [ForeignKey("CategoryId")]
             [InverseProperty("Products")]
-            public virtual Category category { get; set; }
+             [JsonIgnore]
 
-        }
+        public virtual Category category { get; set; }
+        public ICollection<CanteenTransactionProduct> CanteenTransactionProducts { get; set; }
+
+
     }
+}

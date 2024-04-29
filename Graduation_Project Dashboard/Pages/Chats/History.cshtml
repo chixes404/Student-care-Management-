@@ -1,0 +1,94 @@
+﻿@page
+@model Graduation_Project.Dashboard.Pages.Chats.HistoryModel
+@{
+
+    ViewData["Title"] = "Chat History";
+    ViewData["Entity"] = "Chats";
+    ViewData["BreadCrumb"] = "<a href='/Chats' class='breadcrumb-item'>Chats</a>";
+    Layout = "~/Pages/Shared/_MasterLayout.cshtml";
+
+}
+
+<style>
+    .message-container {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .user-message {
+        text-align: right;
+        color: rgb(36, 14, 69); /* Use RGB values */
+    }
+
+    .admin-message {
+        text-align: left;
+        color: black;
+    }
+
+    .back-btn {
+        width: 95px;
+        margin: 15px;
+    }
+</style>
+
+
+<div class="card">
+    <a href="/Chats" class="btn btn-primary btn-labeled btn-labeled-start back-btn">
+        Back
+        <span class="btn-labeled-icon bg-black bg-opacity-20">
+            <i class="icon-arrow-left8"></i>
+        </span>
+    </a>
+    <div class="card-header">
+        <h5 class="card-title mb-0">Chat History</h5>
+    </div>
+    <div class="card-body">
+        @*             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        *@            <div class="row">
+
+
+            @foreach (var message in Model.ChatHistory)
+            {
+                <div class="message-container">
+                    @if (message.CreatedBy == message.UserId)
+                    {
+                        <div class="user-message">@message.Message</div>
+                    }
+                    else
+                    {
+                        <div class="admin-message">@message.Message</div>
+                    }
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center bg-light border-top-0">
+
+
+
+        <form method="post">
+            <input type="hidden" asp-for="UserId" />
+            <textarea asp-for="Message" rows="3" cols="40"></textarea>
+            <br />
+            <button type="submit" class="btn btn-primary btn-labeled btn-labeled-end">
+                Send
+                <span class="btn-labeled-icon bg-black bg-opacity-20">
+                    <i class="icon-paperplane"></i>
+                </span>
+            </button>
+        </form>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Graduation_Project.Shared.Models
@@ -25,16 +26,23 @@ namespace Graduation_Project.Shared.Models
         public int StudentID { get; set; }
 
         public DateTime TransactionDate;
-        public int TransactionAmount { get; set; }
+        public decimal TransactionAmount { get; set; }
 
         public string TransactionType { get; set; }
 
         public string ?Description { get; set; }
-
+        //[Required]
+        //[Column(Order = 120)]
+        //public Guid ?CreatedBy { get; set; }
 
 
         [ForeignKey("StudentID")]
+        [JsonIgnore]
+
         public Student Student { get; set; }
+
+        // Collection navigation property for products bought in the transaction
+        public ICollection<CanteenTransactionProduct> CanteenTransactionProducts { get; set; }
 
 
 

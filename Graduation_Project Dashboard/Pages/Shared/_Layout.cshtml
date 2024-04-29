@@ -57,9 +57,9 @@
 
     @*<script src="~/lib/datatables/DataTables-1.11.5/js/dataTables.bootstrap5.js"></script>*@
     @*<script src="~/script/datatables/datatables.min.js"></script>*@
+
+
+
+    @RenderSection("Scripts", required: false)
    
-
-    @await RenderSectionAsync("Script", required: false)
-
-
 }

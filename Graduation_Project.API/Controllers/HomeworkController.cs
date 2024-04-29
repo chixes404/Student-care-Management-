@@ -27,7 +27,7 @@ namespace Graduation_Project.API.Controllers
             _uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
         }
 
-        [HttpPost]
+        [HttpPost("upload")]
         public IActionResult UploadHomework([FromForm] HomeworkUploadModel model)
         {
             try
@@ -66,6 +66,7 @@ namespace Graduation_Project.API.Controllers
                     GradeId = model.GradeId,
                     TeacherId = model.TeacherId,
                     ClassId = model.ClassId,
+                    SubjectId =model.SubjectId,
                     FilePath = fileName,
                     Created = DateTime.Now,
                     Message = model.Message
@@ -80,37 +81,21 @@ namespace Graduation_Project.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpGet("GetFile")]
-        public ActionResult GetFile(int studentId)
+
+
+
+        [HttpGet("DownloadFile")]
+        public ActionResult GetFile(int homeworkId)
         {
             try
             {
-                // Get the student from the database
-                var student = _context.Students.FirstOrDefault(s => s.Id == studentId);
-                if (student == null)
-                {
-                    return NotFound("Student not found.");
-                }
-
-                // Find the homework file for the student's grade along with teacher name and upload date
+                // Find the homework file by its ID
                 var homework = _context.Homeworks
-                    .Where(h => h.GradeId == student.GradeId)
-                    .Join(
-                        _context.Teachers,
-                        h => h.TeacherId,
-                        t => t.Id,
-                        (h, t) => new
-                        {
-                            FilePath = h.FilePath,
-                            TeacherName = t.Name,
-                            UploadedDate = h.Created
-                        }
-                    )
-                    .FirstOrDefault();
+                    .FirstOrDefault(h => h.Id == homeworkId);
 
                 if (homework == null)
                 {
-                    return NotFound("No homework file found for the student's grade.");
+                    return NotFound("Homework not found.");
                 }
 
                 var filePath = Path.Combine(_uploadDir, homework.FilePath);
@@ -124,9 +109,8 @@ namespace Graduation_Project.API.Controllers
                 // Read the file bytes
                 var bytes = System.IO.File.ReadAllBytes(filePath);
 
-                // Return the file as a downloadable attachment along with teacher name and upload date
+                // Return the file as a downloadable attachment
                 return File(bytes, "application/octet-stream", homework.FilePath);
-
             }
             catch (Exception ex)
             {
@@ -134,8 +118,8 @@ namespace Graduation_Project.API.Controllers
             }
         }
 
-        [HttpGet("GetFileinTheFlutter")]
-        public ActionResult<HomeworkFileResponseDto> GetFileByDetails(int studentId)
+        [HttpGet("HomeWorkDetails")]
+        public ActionResult<IEnumerable<HomeworkFileResponseDto>> GetFileByDetails(int studentId)
         {
             try
             {
@@ -148,22 +132,26 @@ namespace Graduation_Project.API.Controllers
 
                 // Find the homework file for the student's grade along with teacher name and upload date
                 var homework = _context.Homeworks
-                    .Where(h => h.GradeId == student.GradeId)
+                    .Include(h=>h.Subject)
+                    .Where(h => h.GradeId == student.GradeId && h.ClassId==student.ClassId )
                     .Join(
                         _context.Teachers,
                         h => h.TeacherId,
                         t => t.Id,
-                        (h, t) => new HomeworkFileResponseDto
+                        (h, t) => new HomeworkFileResponseDto(_context)
                         {
                             TeacherName = t.Name,
-                            FilePath = h.FilePath
+                            FilePath = h.FilePath,
+                            UploadedDate = h.Created ,
+                            SubjectName = h.Subject.SubjectName
+
                         }
                     )
-                    .FirstOrDefault();
+                    .ToList();
 
                 if (homework == null)
                 {
-                    return NotFound("No homework file found for the student's grade.");
+                    return NotFound("No homework file found for this student.");
                 }
 
                 return Ok(homework);
