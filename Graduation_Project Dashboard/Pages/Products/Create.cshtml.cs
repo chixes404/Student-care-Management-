@@ -130,6 +130,8 @@ namespace Graduation_Project_Dashboard.Pages.Products
             {
                 // The extension is invalid ... discontinue processing the file
                 ModelState.AddModelError("user.ImageUrl", "The file extension is invalid");
+                Categories = await _context.Categories.ToListAsync();
+
                 return Page();
             }
 

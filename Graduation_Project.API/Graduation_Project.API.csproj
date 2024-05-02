@@ -43,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Graduation_Project Dashboard\Graduation_Project.Dashboard.csproj" />
     <ProjectReference Include="..\Graduation_Project.Shared\Graduation_Project.Shared.csproj" />
   </ItemGroup>
 

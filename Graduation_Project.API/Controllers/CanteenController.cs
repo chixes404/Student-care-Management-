@@ -115,70 +115,7 @@ namespace Graduation_Project.API.Controllers
 
 
 
-        // POST: api/BlockedProducts
-
-        /// <summary>
-        /// Block or unblock a product for a student.
-        /// </summary>
-        /// <param name="block">The block object containing product and student information.</param>
-        [HttpPost("block-products")]
-        public async Task<IActionResult> BlockProducts(List<BlockedProductDto> blockDtos)
-        {
-            if (blockDtos == null || !blockDtos.Any())
-            {
-                return BadRequest("No products provided to block.");
-            }
-
-            try
-            {
-                // Validate each BlockedProductDto
-                foreach (var blockDto in blockDtos)
-                {
-                    if (!_context.Products.Any(p => p.Id == blockDto.ProductId) ||
-                        !_context.Students.Any(s => s.Id == blockDto.StudentId))
-                    {
-                        return BadRequest($"Invalid product or student ID for product ID: {blockDto.ProductId}.");
-                    }
-                }
-
-                // Update existing blocks or create new blocks for each product
-                foreach (var blockDto in blockDtos)
-                {
-                    var existingBlock = await _context.BlockedProducts
-                        .FirstOrDefaultAsync(bp => bp.ProductId == blockDto.ProductId && bp.StudentId == blockDto.StudentId);
-
-                    if (existingBlock != null)
-                    {
-                        existingBlock.IsBlocked = blockDto.IsBlocked;
-                    }
-                    else
-                    {
-                        var newBlock = new BlockedProduct
-                        {
-                            ProductId = blockDto.ProductId,
-                            StudentId = blockDto.StudentId,
-                            IsBlocked = blockDto.IsBlocked
-                        };
-                        _context.BlockedProducts.Add(newBlock);
-                    }
-                }
-
-                // Save changes to the database
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the request.");
-            }
-        }
-
-        //private bool BlockedProductExists(int id)
-        //{
-        //    return _context.BlockedProducts.Any(e => e.Id == id);
-        //}
-
+      
 
 
 
@@ -203,6 +140,17 @@ namespace Graduation_Project.API.Controllers
 
 
 
+        [HttpGet("CanteenTransactionProducts")]
+        public async Task<ActionResult<IEnumerable<CanteenTransactionProduct>>> GetCanteenTransactionProducts()
+        {
+            var canteenTransactionProducts = await _context.CanteenTransactionProducts.ToListAsync();
+            return Ok(canteenTransactionProducts);
+        }
+
+
+
+
+
         /// <summary>
         /// Endpoint to submit a transaction for purchasing process in the canteen.
         /// </summary>
@@ -210,7 +158,7 @@ namespace Graduation_Project.API.Controllers
         /// This endpoint allows a student to purchase products from the canteen by submitting a transaction.
         /// The submitted transaction includes information about the student, the products purchased, and the transaction type.
         /// </remarks>
-       
+
         [HttpPost("SubmitTransaction")]
         public async Task<IActionResult> SubmitTransaction(TransactionRequestDto transactionRequest)
         {
@@ -308,14 +256,70 @@ namespace Graduation_Project.API.Controllers
         }
 
 
+        // POST: api/BlockedProducts
 
-
-        [HttpGet("CanteenTransactionProducts")]
-        public async Task<ActionResult<IEnumerable<CanteenTransactionProduct>>> GetCanteenTransactionProducts()
+        /// <summary>
+        /// Block or unblock a product for a student.
+        /// </summary>
+        /// <param name="block">The block object containing product and student information.</param>
+        [HttpPost("block-products")]
+        public async Task<IActionResult> BlockProducts(List<BlockedProductDto> blockDtos)
         {
-            var canteenTransactionProducts = await _context.CanteenTransactionProducts.ToListAsync();
-            return Ok(canteenTransactionProducts);
+            if (blockDtos == null || !blockDtos.Any())
+            {
+                return BadRequest("No products provided to block.");
+            }
+
+            try
+            {
+                // Validate each BlockedProductDto
+                foreach (var blockDto in blockDtos)
+                {
+                    if (!_context.Products.Any(p => p.Id == blockDto.ProductId) ||
+                        !_context.Students.Any(s => s.Id == blockDto.StudentId))
+                    {
+                        return BadRequest($"Invalid product or student ID for product ID: {blockDto.ProductId}.");
+                    }
+                }
+
+                // Update existing blocks or create new blocks for each product
+                foreach (var blockDto in blockDtos)
+                {
+                    var existingBlock = await _context.BlockedProducts
+                        .FirstOrDefaultAsync(bp => bp.ProductId == blockDto.ProductId && bp.StudentId == blockDto.StudentId);
+
+                    if (existingBlock != null)
+                    {
+                        existingBlock.IsBlocked = blockDto.IsBlocked;
+                    }
+                    else
+                    {
+                        var newBlock = new BlockedProduct
+                        {
+                            ProductId = blockDto.ProductId,
+                            StudentId = blockDto.StudentId,
+                            IsBlocked = blockDto.IsBlocked
+                        };
+                        _context.BlockedProducts.Add(newBlock);
+                    }
+                }
+
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the request.");
+            }
         }
+
+        //private bool BlockedProductExists(int id)
+        //{
+        //    return _context.BlockedProducts.Any(e => e.Id == id);
+        //}
+
 
 
 
